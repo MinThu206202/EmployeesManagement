@@ -1,0 +1,257 @@
+﻿@{
+    ViewData["Title"] = "Dashboard Home";
+}
+
+<!-- Dashboard Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+    <div>
+        <h1 class="text-3xl font-bold dark:text-white">Workforce Overview</h1>
+        <p class="text-gray-500 dark:text-gray-400 text-sm">
+            Real-time HR metrics and employee distribution
+        </p>
+    </div>
+
+    <div class="flex items-center gap-3">
+        <button
+            class="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-semibold shadow-sm hover:bg-gray-50 flex items-center gap-2">
+            <i class="bi bi-download"></i> Export Report
+        </button>
+
+        <button
+            class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold shadow hover:bg-indigo-700 flex items-center gap-2">
+            <i class="bi bi-plus-lg"></i> Add Employee
+        </button>
+    </div>
+</div>
+
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+    <!-- Active Staff -->
+    <div
+        class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center hover:shadow-md transition">
+        <div class="p-4 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl mr-4">
+            <i class="bi bi-people-fill text-2xl"></i>
+        </div>
+        <div>
+            <p class="text-[10px] text-gray-500 uppercase font-semibold tracking-wide">Active Staff</p>
+            <h3 class="text-2xl font-bold dark:text-white">1,284</h3>
+        </div>
+    </div>
+
+    <!-- Monthly Budget -->
+    <div
+        class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center hover:shadow-md transition">
+        <div class="p-4 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-xl mr-4">
+            <i class="bi bi-cash-stack text-2xl"></i>
+        </div>
+        <div>
+            <p class="text-[10px] text-gray-500 uppercase font-semibold tracking-wide">Monthly Budget</p>
+            <h3 class="text-2xl font-bold dark:text-white">$42.5k</h3>
+        </div>
+    </div>
+
+    <!-- Productivity -->
+    <div
+        class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center hover:shadow-md transition">
+        <div class="p-4 bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 rounded-xl mr-4">
+            <i class="bi bi-lightning-charge text-2xl"></i>
+        </div>
+        <div>
+            <p class="text-[10px] text-gray-500 uppercase font-semibold tracking-wide">Productivity</p>
+            <h3 class="text-2xl font-bold dark:text-white">94.8%</h3>
+        </div>
+    </div>
+
+    <!-- Retention -->
+    <div
+        class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center hover:shadow-md transition">
+        <div class="p-4 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl mr-4">
+            <i class="bi bi-heart-pulse text-2xl"></i>
+        </div>
+        <div>
+            <p class="text-[10px] text-gray-500 uppercase font-semibold tracking-wide">Avg. Retention</p>
+            <h3 class="text-2xl font-bold dark:text-white">3.2 Years</h3>
+        </div>
+    </div>
+
+</div>
+
+<!-- Charts + Department Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+
+    <!-- Growth Chart -->
+    <div
+        class="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h3 class="font-bold text-lg dark:text-white">Growth & Turnover</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Hiring vs resignations</p>
+            </div>
+        </div>
+
+        <div class="h-72">
+            <canvas id="growthChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Departments -->
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+        <h3 class="font-bold text-lg mb-4 dark:text-white">Departments</h3>
+
+        <div class="space-y-4">
+
+            <div>
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="font-medium">Engineering</span>
+                    <span class="text-gray-400">540</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full">
+                    <div class="bg-indigo-500 h-2 rounded-full w-[42%]"></div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="font-medium">Marketing</span>
+                    <span class="text-gray-400">360</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full">
+                    <div class="bg-green-500 h-2 rounded-full w-[28%]"></div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="font-medium">Sales</span>
+                    <span class="text-gray-400">192</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full">
+                    <div class="bg-yellow-500 h-2 rounded-full w-[15%]"></div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex justify-between text-sm mb-1">
+                    <span class="font-medium">Human Resources</span>
+                    <span class="text-gray-400">128</span>
+                </div>
+                <div class="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full">
+                    <div class="bg-red-500 h-2 rounded-full w-[10%]"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Bottom Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+
+    <!-- Today's Attendance -->
+    <div
+        class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+
+        <div class="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
+            <h3 class="text-lg font-bold dark:text-white">Today's Attendance</h3>
+
+            <div class="flex gap-2 text-xs font-semibold">
+                <span class="px-3 py-1 bg-green-100 text-green-600 rounded-lg">1,240 Present</span>
+                <span class="px-3 py-1 bg-red-100 text-red-600 rounded-lg">44 Absent</span>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-gray-50 dark:bg-gray-700/40">
+                    <tr>
+                        <th class="px-6 py-3 text-[10px] uppercase text-gray-400 font-semibold">Employee</th>
+                        <th class="px-6 py-3 text-[10px] uppercase text-gray-400 font-semibold">Check In</th>
+                        <th class="px-6 py-3 text-[10px] uppercase text-gray-400 font-semibold">Status</th>
+                        <th class="px-6 py-3 text-[10px] uppercase text-gray-400 font-semibold">Efficiency</th>
+                    </tr>
+                </thead>
+
+                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                    <tr>
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                <img src="https://ui-avatars.com/api/?name=Alex+Morgan&background=6366f1&color=fff"
+                                     class="w-10 h-10 rounded-lg" />
+
+                                <div>
+                                    <p class="font-semibold text-sm">Alex Morgan</p>
+                                    <p class="text-xs text-gray-400">Software Architect</p>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td class="px-6 py-4 text-sm text-gray-600">08:42 AM</td>
+
+                        <td class="px-6 py-4">
+                            <span
+                                class="px-2 py-1 bg-green-100 text-green-600 text-[10px] font-semibold rounded-lg uppercase">
+                                On Time
+                            </span>
+                        </td>
+
+                        <td class="px-6 py-4">
+                            <div class="w-full bg-gray-200 dark:bg-gray-700 h-1.5 rounded-full">
+                                <div class="bg-indigo-500 h-1.5 rounded-full w-[88%]"></div>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Upcoming Leaves -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+
+        <h3 class="text-lg font-bold mb-6 dark:text-white">Upcoming Leaves</h3>
+
+        <div class="space-y-5">
+
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+
+                    <div
+                        class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex flex-col items-center justify-center">
+                        <span class="text-[10px] font-bold uppercase">Oct</span>
+                        <span class="text-sm font-bold">14</span>
+                    </div>
+
+                    <div>
+                        <p class="font-semibold text-sm">Design Workshop</p>
+                        <p class="text-xs text-gray-400">Marketing Team (4 Members)</p>
+                    </div>
+
+                </div>
+
+                <i class="bi bi-chevron-right text-gray-400"></i>
+            </div>
+
+        </div>
+
+        <!-- Reminder Card -->
+        <div class="mt-6 p-5 bg-gray-900 text-white rounded-xl">
+
+            <p class="text-xs uppercase tracking-wide opacity-80 mb-2">
+                Review Pending
+            </p>
+
+            <p class="text-sm mb-4">
+                You have 12 performance reviews to complete by Friday.
+            </p>
+
+            <button class="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg text-sm font-semibold">
+                Launch Reviews
+            </button>
+
+        </div>
+
+    </div>
+
+</div>

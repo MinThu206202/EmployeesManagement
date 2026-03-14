@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: employees_sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
+
+  app:
+    build: .
+    container_name: employees_app
+    ports:
+      - "5050:8080"
+    depends_on:
+      - sqlserver
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+
+volumes:
+  sql_data:
