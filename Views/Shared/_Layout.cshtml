@@ -113,6 +113,10 @@
                                     <a asp-action="index" asp-controller="LeaveApplications"
                                            class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">Leave
                                         Application</a>
+                                        <a asp-action="ApproveLeaveApplications" asp-controller="LeaveApplications"
+                                           class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">Approve Leave Applications</a>
+                                            <a asp-action="RejectLeaveApplications" asp-controller="LeaveApplications"
+                                           class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">Reject Leave Applications</a>
                             </div>
                         </div>
                     </div>
@@ -131,10 +135,14 @@
                         <div id="systemMenu" class="submenu-container relative">
                             <div class="submenu-line sidebar-text"></div>
                             <div class="pl-12 pr-4 py-1 space-y-1">
-                                        <a asp-action="Index" asp-asp-controller="Designations"
+                                    <a asp-action="Index" asp-controller="Users"
+                                    class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">System                                  Users</a>
+                                                    <a asp-action="Index" asp-controller="Roles"
+                                                           class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">System Roles</a>
+                                    <a asp-action="Index" asp-controller="Designations"
                                            class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">Designations</a>
-                                <a asp-action="Index" asp-controller="Departments" class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">Deprtments</a>
-                                <a asp-action="Index" asp-controller="Banks" class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">Banks</a>
+                                    <a asp-action="Index" asp-controller="Departments" class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">Deprtments</a>
+                                    <a asp-action="Index" asp-controller="Banks" class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">Banks</a>
                                         <a asp-action="Index" asp-controller="Countries"
                                            class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">Countries</a>
                                         <a asp-action="Index" asp-controller="Cities"

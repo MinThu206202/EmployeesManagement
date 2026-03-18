@@ -122,6 +122,11 @@
 
                             <div class="inline-flex rounded-lg shadow-sm border border-gray-200 dark:border-gray-600">
 
+                                <a asp-action="ApproveLeave" asp-route-id="@item.Id"
+                                       class="px-3 py-1.5 text-xs font-medium text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 border-r border-gray-200 dark:border-gray-600 rounded-l-lg">
+                                    <i class="bi bi-check-circle"></i>
+                                </a>
+
                                 <a asp-action="Edit" asp-route-id="@item.Id"
                                        class="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-l-lg border-r border-gray-200 dark:border-gray-600">
                                     <i class="bi bi-pencil"></i>

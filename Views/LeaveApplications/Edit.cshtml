@@ -1,104 +1,261 @@
 @model EmployeesManagement.Models.LeaveApplication
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Leave Application";
+
+    var firstInitial = !string.IsNullOrEmpty(Model.Employee?.FirstName) ? Model.Employee.FirstName.Substring(0,1) : "";
+    var lastInitial = !string.IsNullOrEmpty(Model.Employee?.LastName) ? Model.Employee.LastName.Substring(0,1) : "";
 }
 
-<h1>Edit</h1>
+<style>
+@@keyframes fadeInUp {
+from {opacity:0; transform:translateY(10px);}
+to {opacity:1; transform:translateY(0);}
+}
 
-<h4>LeaveApplication</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="EmployeeId" class="control-label"></label>
-                <select asp-for="EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId"></select>
-                <span asp-validation-for="EmployeeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NoOfDays" class="control-label"></label>
-                <input asp-for="NoOfDays" class="form-control" />
-                <span asp-validation-for="NoOfDays" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DurationId" class="control-label"></label>
-                <select asp-for="DurationId" class="form-control" asp-items="ViewBag.DurationId"></select>
-                <span asp-validation-for="DurationId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LeaveTypeId" class="control-label"></label>
-                <select asp-for="LeaveTypeId" class="form-control" asp-items="ViewBag.LeaveTypeId"></select>
-                <span asp-validation-for="LeaveTypeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Attachment" class="control-label"></label>
-                <input asp-for="Attachment" class="form-control" />
-                <span asp-validation-for="Attachment" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="StatusId" class="control-label"></label>
-                <select asp-for="StatusId" class="form-control" asp-items="ViewBag.StatusId"></select>
-                <span asp-validation-for="StatusId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ApprovedById" class="control-label"></label>
-                <input asp-for="ApprovedById" class="form-control" />
-                <span asp-validation-for="ApprovedById" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ApprovedOn" class="control-label"></label>
-                <input asp-for="ApprovedOn" class="form-control" />
-                <span asp-validation-for="ApprovedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedById" class="control-label"></label>
-                <input asp-for="CreatedById" class="form-control" />
-                <span asp-validation-for="CreatedById" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedOn" class="control-label"></label>
-                <input asp-for="CreatedOn" class="form-control" />
-                <span asp-validation-for="CreatedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedById" class="control-label"></label>
-                <input asp-for="ModifiedById" class="form-control" />
-                <span asp-validation-for="ModifiedById" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedOn" class="control-label"></label>
-                <input asp-for="ModifiedOn" class="form-control" />
-                <span asp-validation-for="ModifiedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+.animate-fade-in{
+animation:fadeInUp .4s ease-out forwards;
+}
+</style>
+
+
+<div class="max-w-7xl mx-auto px-6 pt-2 pb-6 sm:px-8 lg:px-10 animate-fade-in">
+<!-- HEADER -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-3">
+<div>
+<nav class="flex mb-1">
+<ol class="inline-flex items-center space-x-2 text-xs font-medium text-gray-500">
+<li>Leave Management</li>
+<li><i class="bi bi-chevron-right"></i></li>
+<li class="text-indigo-600">Edit</li>
+</ol>
+</nav>
+
+<h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">
+Edit Leave Request
+</h1>
+</div>
+
+<div class="flex items-center gap-3">
+
+<a asp-action="Index"
+class="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm">
+<i class="bi bi-arrow-left mr-2"></i>
+Back
+</a>
+
+</div>
+</div>
+
+
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data" id="editForm">
+
+<input type="hidden" asp-for="Id" />
+
+<div asp-validation-summary="ModelOnly" class="text-red-500 text-sm mb-4"></div>
+
+
+<div class="bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden">
+
+<div class="p-6 lg:p-7">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+
+<!-- LEFT SIDE -->
+<div class="space-y-6">
+<!-- EMPLOYEE -->
+<section>
+
+<h3 class="flex items-center text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">
+<i class="bi bi-person-badge mr-2 text-indigo-500"></i>
+Employee
+</h3>
+
+<div class="flex items-center space-x-5 p-5 rounded-xl bg-slate-50 border border-slate-100">
+
+<div class="h-12 w-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
+@firstInitial@lastInitial
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+
+<p class="text-base font-semibold text-slate-900">
+@($"{Model.Employee?.FirstName} {Model.Employee?.LastName}")
+</p>
+
+<p class="text-xs text-slate-500">
+Employee ID: @Model.EmployeeId
+</p>
+
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+</div>
+
+</section>
+
+
+<!-- LEAVE TYPE -->
+<section class="grid grid-cols-2 gap-6">
+
+<div>
+
+<h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
+Leave Type
+</h4>
+
+<select asp-for="LeaveTypeId"
+asp-items="ViewBag.LeaveTypeId"
+class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
+</select>
+
+</div>
+
+
+<div>
+
+<h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
+Duration
+</h4>
+
+<select asp-for="DurationId"
+asp-items="ViewBag.DurationId"
+class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
+</select>
+
+</div>
+
+</section>
+
+
+
+<!-- DATES -->
+<section>
+
+<h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">
+Calendar Period
+</h4>
+
+<div class="flex items-center space-x-4">
+
+<div class="flex-1">
+
+<label class="block text-xs text-slate-400 mb-1">Start</label>
+
+<input asp-for="StartDate"
+type="date"
+class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500"/>
+
+</div>
+
+<i class="bi bi-arrow-right text-slate-300"></i>
+
+<div class="flex-1">
+
+<label class="block text-xs text-slate-400 mb-1">End</label>
+
+<input asp-for="EndDate"
+type="date"
+class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500"/>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- NO OF DAYS -->
+<section>
+
+<h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
+Total Days
+</h4>
+
+<input asp-for="NoOfDays"
+readonly
+class="w-full bg-indigo-50 border border-indigo-100 text-indigo-700 rounded-lg px-3 py-2 font-semibold"/>
+
+</section>
+
+</div>
+
+
+
+<!-- RIGHT SIDE -->
+<div class="space-y-8">
+
+<section>
+
+<h3 class="flex items-center text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">
+<i class="bi bi-chat-left-text mr-2 text-indigo-500"></i>
+Reason / Description
+</h3>
+
+<textarea asp-for="Description"
+class="w-full min-h-[160px] p-4 rounded-xl bg-slate-50 border border-dashed border-slate-200 focus:ring-2 focus:ring-indigo-500"
+placeholder="Reason for leave..."></textarea>
+
+</section>
+
+
+<section>
+
+<h3 class="flex items-center text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">
+<i class="bi bi-paperclip mr-2 text-indigo-500"></i>
+Attachment
+</h3>
+
+<input asp-for="Attachment"
+type="file"
+class="w-full border border-dashed border-slate-300 rounded-lg px-4 py-4 text-sm text-slate-500"/>
+
+</section>
+
+
+<section>
+
+<h3 class="flex items-center text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">
+<i class="bi bi-check-circle mr-2 text-indigo-500"></i>
+Status
+</h3>
+
+<select asp-for="StatusId"
+asp-items="ViewBag.StatusId"
+class="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-500">
+</select>
+
+</section>
+
+</div>
+
+</div>
+
+
+<!-- SAVE BUTTON INSIDE CARD -->
+<div class="flex justify-end mt-8 border-t pt-6">
+
+<button type="submit"
+class="inline-flex items-center px-6 py-2.5 text-sm font-bold text-white bg-indigo-600 rounded-lg shadow hover:bg-indigo-700 transform hover:-translate-y-0.5 transition-all">
+
+<i class="bi bi-check-lg mr-2"></i>
+Save Changes
+
+</button>
+
+</div>
+
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+
+@section Scripts{
+@{
+await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }

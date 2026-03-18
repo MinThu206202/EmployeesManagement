@@ -2,80 +2,681 @@
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Sign In";
+    Layout = null;
 }
 
-<h1>@ViewData["Title"]</h1>
-<div class="row">
-    <div class="col-md-4">
-        <section>
-            <form id="account" method="post">
-                <h2>Use a local account to log in.</h2>
-                <hr />
-                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label asp-for="Input.Email" class="form-label">Email</label>
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+    }
+
+    .ems-wrap { min-height: 100vh; display: flex; }
+
+    /* ══════════════════════════
+       LEFT PANEL
+       Warm Charcoal — #1C2B3A (professional, not black)
+       Accent: Amber/Gold #F59E0B
+    ══════════════════════════ */
+    .ems-left {
+        display: none;
+        width: 42%;
+        flex-shrink: 0;
+        background: #1C2B3A;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+    }
+    @@media (min-width: 1024px) { .ems-left { display: flex; } }
+
+    /* gradient overlay */
+    .l-grad {
+        position: absolute; inset: 0;
+        background: linear-gradient(160deg,
+            rgba(245,158,11,.08) 0%,
+            transparent 50%,
+            rgba(59,130,246,.06) 100%);
+        pointer-events: none;
+    }
+
+    /* grid dots */
+    .l-dots {
+        position: absolute; inset: 0;
+        background-image: radial-gradient(circle, rgba(255,255,255,.06) 1px, transparent 1px);
+        background-size: 32px 32px;
+        pointer-events: none;
+    }
+
+    /* right edge fade */
+    .l-fade {
+        position: absolute; top: 0; right: 0; bottom: 0;
+        width: 80px;
+        background: linear-gradient(90deg, transparent, rgba(28,43,58,.6));
+        pointer-events: none;
+    }
+
+    /* top accent bar */
+    .l-topbar {
+        position: absolute; top: 0; left: 0; right: 0; height: 3px;
+        background: linear-gradient(90deg, #F59E0B, #FBBF24, #F59E0B);
+        background-size: 200% 100%;
+        animation: barShimmer 3s linear infinite;
+    }
+    @@keyframes barShimmer {
+        0%   { background-position: 0% 0; }
+        100% { background-position: 200% 0; }
+    }
+
+    /* decorative ring */
+    .l-ring {
+        position: absolute;
+        border-radius: 50%;
+        border: 1px solid rgba(245,158,11,.1);
+        pointer-events: none;
+    }
+    .l-ring-1 { width: 420px; height: 420px; top: -140px; right: -140px; }
+    .l-ring-2 { width: 260px; height: 260px; top: -30px;  right: -30px; border-color: rgba(245,158,11,.07); }
+    .l-ring-3 { width: 300px; height: 300px; bottom: -100px; left: -100px; border-color: rgba(59,130,246,.08); }
+
+    .lz { position: relative; z-index: 2; }
+
+    .l-inner {
+        display: flex; flex-direction: column;
+        justify-content: space-between;
+        height: 100%; padding: 2.5rem;
+    }
+
+    /* brand */
+    .l-brand {
+        display: flex; align-items: center; gap: .7rem;
+        animation: fadeUp .5s ease both .05s; opacity: 0;
+    }
+    .l-brand-mark {
+        width: 36px; height: 36px; border-radius: 9px;
+        background: #F59E0B;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 0 0 4px rgba(245,158,11,.15);
+    }
+    .l-brand-name {
+        font-size: .88rem; font-weight: 700;
+        color: #F1F5F9; letter-spacing: -.1px;
+    }
+    .l-brand-name span {
+        color: rgba(255,255,255,.35); font-weight: 400;
+        font-size: .74rem; margin-left: .2rem;
+    }
+
+    /* main content */
+    .l-content { display: flex; flex-direction: column; gap: 2rem; }
+
+    /* headline */
+    .l-headline { animation: fadeUp .5s ease both .15s; opacity: 0; }
+    .l-headline-tag {
+        display: inline-flex; align-items: center; gap: .4rem;
+        font-size: .63rem; font-weight: 600;
+        color: #F59E0B;
+        text-transform: uppercase; letter-spacing: 1.2px;
+        margin-bottom: .85rem;
+    }
+    .l-tag-dot { width: 5px; height: 5px; border-radius: 50%; background: #F59E0B; flex-shrink: 0; }
+    .l-headline-title {
+        font-size: 2rem; font-weight: 800;
+        color: #F1F5F9; line-height: 1.18;
+        letter-spacing: -.5px; margin-bottom: .75rem;
+    }
+    .l-headline-title em { font-style: normal; color: #FBBF24; }
+    .l-headline-desc {
+        font-size: .81rem; color: rgba(241,245,249,.45);
+        line-height: 1.7; max-width: 285px;
+    }
+
+    /* feature pills */
+    .l-pills {
+        display: flex; flex-wrap: wrap; gap: .45rem;
+        animation: fadeUp .5s ease both .28s; opacity: 0;
+    }
+    .l-pill {
+        display: inline-flex; align-items: center; gap: .35rem;
+        padding: .38rem .72rem;
+        background: rgba(255,255,255,.05);
+        border: 1px solid rgba(255,255,255,.09);
+        border-radius: 999px;
+        font-size: .71rem; font-weight: 500;
+        color: rgba(241,245,249,.6);
+        transition: all .2s;
+        cursor: default;
+    }
+    .l-pill:hover {
+        background: rgba(245,158,11,.12);
+        border-color: rgba(245,158,11,.25);
+        color: #FBBF24;
+    }
+    .l-pill-dot {
+        width: 4px; height: 4px; border-radius: 50%;
+        background: #F59E0B; flex-shrink: 0;
+    }
+
+    /* stats */
+    .l-stats {
+        display: grid; grid-template-columns: repeat(3,1fr);
+        gap: .5rem;
+        animation: fadeUp .5s ease both .38s; opacity: 0;
+    }
+    .l-stat {
+        padding: .85rem .75rem;
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.07);
+        border-top: 2px solid rgba(245,158,11,.3);
+        border-radius: 6px;
+        transition: all .2s;
+    }
+    .l-stat:hover {
+        background: rgba(245,158,11,.07);
+        border-top-color: #F59E0B;
+    }
+    .l-stat-n {
+        font-size: 1.2rem; font-weight: 700; color: #F1F5F9;
+        letter-spacing: -.3px;
+    }
+    .l-stat-n sup { font-size: .6rem; color: #F59E0B; font-weight: 600; }
+    .l-stat-k {
+        font-size: .6rem; color: rgba(241,245,249,.3);
+        text-transform: uppercase; letter-spacing: .6px; margin-top: .12rem;
+    }
+
+    /* clients */
+    .l-clients { animation: fadeUp .5s ease both .45s; opacity: 0; }
+    .l-clients-label {
+        font-size: .62rem; color: rgba(255,255,255,.25);
+        text-transform: uppercase; letter-spacing: 1px; margin-bottom: .6rem;
+    }
+    .l-client-row { display: flex; align-items: center; gap: .55rem; flex-wrap: wrap; }
+    .l-client-chip {
+        display: inline-flex; align-items: center; gap: .32rem;
+        padding: .3rem .65rem;
+        background: rgba(255,255,255,.05);
+        border: 1px solid rgba(255,255,255,.08);
+        border-radius: 4px;
+        font-size: .67rem; font-weight: 600;
+        color: rgba(241,245,249,.45); letter-spacing: .1px;
+    }
+    .chip-dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(245,158,11,.5); }
+
+    /* bottom */
+    .l-bottom {
+        display: flex; align-items: center; justify-content: space-between;
+        padding-top: 1.25rem;
+        border-top: 1px solid rgba(255,255,255,.07);
+        animation: fadeUp .5s ease both .52s; opacity: 0;
+    }
+    .l-bottom-copy { font-size: .62rem; color: rgba(255,255,255,.18); }
+    .l-bottom-badge {
+        display: flex; align-items: center; gap: .28rem;
+        font-size: .6rem; color: rgba(255,255,255,.25);
+        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(255,255,255,.07);
+        padding: .22rem .6rem; border-radius: 999px;
+    }
+
+    /* ══════════════════════════
+       RIGHT PANEL — pure white, no card
+    ══════════════════════════ */
+    .ems-right {
+        flex: 1; display: flex; align-items: center; justify-content: center;
+        padding: 2rem 2.5rem;
+        background: #FFFFFF;
+    }
+
+    .ems-form-wrap {
+        width: 100%; max-width: 380px;
+        animation: cardIn .6s cubic-bezier(.22,.68,0,1.12) both .1s;
+        opacity: 0;
+    }
+
+    /* mobile brand */
+    .mob-brand {
+        display: flex; align-items: center; gap: .5rem; margin-bottom: 1.5rem;
+    }
+    .mob-mark {
+        width: 30px; height: 30px; border-radius: 7px;
+        background: #F59E0B;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .mob-name { font-size: .8rem; font-weight: 700; color: #1C2B3A; letter-spacing: -.1px; }
+    @@media (min-width: 1024px) { .mob-brand { display: none; } }
+
+    /* form head */
+    .f-head { margin-bottom: 1.75rem; }
+    .f-head-top {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: .65rem;
+    }
+    .f-eyebrow {
+        font-size: .62rem; font-weight: 600; color: #64748B;
+        text-transform: uppercase; letter-spacing: .8px;
+        display: flex; align-items: center; gap: .3rem;
+    }
+    .f-eyebrow-dot { width: 4px; height: 4px; border-radius: 50%; background: #64748B; }
+    .f-sso {
+        display: flex; align-items: center; gap: .28rem;
+        font-size: .6rem; font-weight: 600; color: #065F46;
+        background: #D1FAE5; border: 1px solid #6EE7B7;
+        padding: .2rem .55rem; border-radius: 999px;
+    }
+    .sso-dot {
+        width: 5px; height: 5px; border-radius: 50%; background: #059669;
+        animation: ssoPulse 2s ease-in-out infinite;
+    }
+    @@keyframes ssoPulse {
+        0%,100% { box-shadow: 0 0 0 0 rgba(5,150,105,.4); }
+        50%      { box-shadow: 0 0 0 3px rgba(5,150,105,0); }
+    }
+    .f-title {
+        font-size: 1.55rem; font-weight: 700; color: #0F172A;
+        letter-spacing: -.4px; line-height: 1.2; margin-bottom: .22rem;
+    }
+    .f-sub { font-size: .78rem; color: #94A3B8; }
+
+    /* divider */
+    .f-div { height: 1px; background: #F1F5F9; margin: 1.25rem 0; }
+
+    /* validation */
+    .val-sum {
+        padding: .55rem .8rem; background: #FFF7ED;
+        border: 1px solid #FED7AA; border-radius: 4px;
+        font-size: .73rem; color: #9A3412; margin-bottom: .85rem;
+    }
+    .val-sum ul { margin: 0; padding-left: 1.1rem; }
+
+    /* fields */
+    .field { display: flex; flex-direction: column; gap: .25rem; margin-bottom: .7rem; }
+    .frow  { display: flex; align-items: center; justify-content: space-between; }
+    .flabel { font-size: .69rem; font-weight: 600; color: #475569; letter-spacing: .1px; }
+    .fforgot {
+        font-size: .69rem; font-weight: 500; color: #1C2B3A;
+        text-decoration: none; transition: color .15s; border-bottom: 1px solid #CBD5E1;
+    }
+    .fforgot:hover { color: #F59E0B; border-color: #F59E0B; }
+
+    .fiw { position: relative; }
+    .fic {
+        position: absolute; left: .78rem; top: 50%;
+        transform: translateY(-50%);
+        color: #CBD5E1; pointer-events: none; transition: color .15s;
+    }
+    .fiw:focus-within .fic { color: #1C2B3A; }
+
+    .finput {
+        width: 100%; padding: .65rem .85rem .65rem 2.25rem;
+        font-size: .85rem; font-family: 'Inter', sans-serif;
+        color: #0F172A; background: #F8FAFC;
+        border: 1.5px solid #E2E8F0; border-radius: 6px; outline: none;
+        transition: border-color .15s, box-shadow .15s, background .15s;
+        letter-spacing: -.1px;
+    }
+    .finput::placeholder { color: #CBD5E1; }
+    .finput:hover  { border-color: #94A3B8; background: #fff; }
+    .finput:focus  {
+        border-color: #1C2B3A;
+        box-shadow: 0 0 0 3px rgba(28,43,58,.08);
+        background: #fff;
+    }
+    .ferr { font-size: .67rem; color: #DC2626; }
+
+    /* remember */
+    .rem-row {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+    .rem-l { display: flex; align-items: center; gap: .4rem; }
+    .rem-chk { width: 14px; height: 14px; accent-color: #1C2B3A; cursor: pointer; }
+    .rem-lbl { font-size: .76rem; color: #475569; cursor: pointer; user-select: none; }
+    .rem-r { font-size: .66rem; color: #CBD5E1; }
+
+    /* submit */
+    .sub-btn {
+        width: 100%; padding: .72rem 1rem;
+        background: #1C2B3A; color: #fff;
+        font-family: 'Inter', sans-serif;
+        font-size: .86rem; font-weight: 600;
+        border: none; border-radius: 6px; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; gap: .42rem;
+        transition: all .18s; letter-spacing: -.1px;
+        margin-bottom: 1.25rem;
+        position: relative; overflow: hidden;
+    }
+    .sub-btn::after {
+        content: '';
+        position: absolute; inset: 0;
+        background: linear-gradient(135deg, rgba(245,158,11,.15), transparent);
+        opacity: 0; transition: opacity .2s;
+    }
+    .sub-btn:hover  {
+        background: #243447;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(28,43,58,.25);
+    }
+    .sub-btn:hover::after { opacity: 1; }
+    .sub-btn:active { transform: none; background: #111E2B; }
+
+    /* or */
+    .or-div {
+        display: flex; align-items: center; gap: .65rem;
+        font-size: .68rem; font-weight: 500; color: #CBD5E1;
+        margin-bottom: .85rem;
+    }
+    .or-div::before, .or-div::after { content: ''; flex: 1; height: 1px; background: #F1F5F9; }
+
+    /* social */
+    .soc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .45rem; margin-bottom: 1.25rem; }
+    .soc-btn {
+        display: flex; align-items: center; justify-content: center; gap: .4rem;
+        padding: .6rem .5rem;
+        border: 1.5px solid #E2E8F0; border-radius: 6px;
+        background: #fff; font-family: 'Inter', sans-serif;
+        font-size: .76rem; font-weight: 500; color: #334155;
+        cursor: pointer; transition: all .15s; width: 100%;
+    }
+    .soc-btn:hover {
+        border-color: #1C2B3A; background: #F8FAFC; color: #1C2B3A;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(28,43,58,.08);
+    }
+    .soc-btn:active { transform: none; }
+    .soc-btn.full { grid-column: 1/-1; }
+
+    /* trust */
+    .trust-row {
+        display: flex; align-items: center; justify-content: center; gap: .85rem;
+        padding: .65rem;
+        border-top: 1px solid #F1F5F9;
+        border-bottom: 1px solid #F1F5F9;
+        margin-bottom: 1.1rem;
+    }
+    .trust-item { display: flex; align-items: center; gap: .28rem; font-size: .63rem; color: #94A3B8; font-weight: 500; }
+    .trust-sep { width: 1px; height: 10px; background: #E2E8F0; }
+
+    /* footer */
+    .f-foot { display: flex; flex-direction: column; gap: .3rem; align-items: center; }
+    .foot-a { font-size: .76rem; color: #94A3B8; text-decoration: none; }
+    .foot-a strong { color: #1C2B3A; font-weight: 600; border-bottom: 1px solid #CBD5E1; }
+    .foot-a:hover strong { color: #F59E0B; border-color: #F59E0B; }
+    .foot-sm { font-size: .67rem; color: #CBD5E1; text-decoration: none; transition: color .15s; }
+    .foot-sm:hover { color: #1C2B3A; }
+
+    /* animations */
+    @@keyframes cardIn {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: none; }
+    }
+    @@keyframes fadeUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: none; }
+    }
+</style>
+
+<div class="ems-wrap">
+
+    <!-- ══ LEFT ══ -->
+    <div class="ems-left">
+        <div class="l-grad"></div>
+        <div class="l-dots"></div>
+        <div class="l-fade"></div>
+        <div class="l-topbar"></div>
+        <div class="l-ring l-ring-1"></div>
+        <div class="l-ring l-ring-2"></div>
+        <div class="l-ring l-ring-3"></div>
+
+        <div class="lz l-inner">
+
+            <!-- Brand -->
+            <div class="l-brand">
+                <div class="l-brand-mark">
+                    <svg width="18" height="18" fill="none" viewBox="0 0 20 20" stroke="white" stroke-width="2.2">
+                        <path d="M3 16v-2a4 4 0 014-4h6a4 4 0 014 4v2"/>
+                        <circle cx="10" cy="6" r="3.5"/>
+                    </svg>
                 </div>
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label asp-for="Input.Password" class="form-label">Password</label>
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-                <div class="checkbox mb-3">
-                    <label asp-for="Input.RememberMe" class="form-label">
-                        <input class="form-check-input" asp-for="Input.RememberMe" />
-                        @Html.DisplayNameFor(m => m.Input.RememberMe)
-                    </label>
-                </div>
-                <div>
-                    <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-                </div>
-                <div>
-                    <p>
-                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                    </p>
-                    <p>
-                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
-                    </p>
-                </div>
-            </form>
-        </section>
-    </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h3>Use another service to log in.</h3>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
-                        </p>
+                <div class="l-brand-name">StaffPortal <span>EMS</span></div>
+            </div>
+
+            <!-- Content -->
+            <div class="l-content">
+
+                <!-- Headline -->
+                <div class="l-headline">
+                    <div class="l-headline-tag">
+                        <span class="l-tag-dot"></span>
+                        Employee Management System
                     </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins!)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
-        </section>
+                    <div class="l-headline-title">
+                        Built for modern<br/>
+                        <em>HR teams.</em>
+                    </div>
+                    <p class="l-headline-desc">
+                        Manage your entire workforce from one secure platform trusted by enterprise HR teams globally.
+                    </p>
+                </div>
+
+                <!-- Pills -->
+                <div class="l-pills">
+                    <div class="l-pill"><span class="l-pill-dot"></span>Leave Management</div>
+                    <div class="l-pill"><span class="l-pill-dot"></span>Payroll</div>
+                    <div class="l-pill"><span class="l-pill-dot"></span>Attendance</div>
+                    <div class="l-pill"><span class="l-pill-dot"></span>Performance</div>
+                    <div class="l-pill"><span class="l-pill-dot"></span>Compliance</div>
+                    <div class="l-pill"><span class="l-pill-dot"></span>Analytics</div>
+                </div>
+
+                <!-- Stats -->
+                <div class="l-stats">
+                    <div class="l-stat">
+                        <div class="l-stat-n">12k<sup>+</sup></div>
+                        <div class="l-stat-k">Employees</div>
+                    </div>
+                    <div class="l-stat">
+                        <div class="l-stat-n">99.9<sup>%</sup></div>
+                        <div class="l-stat-k">Uptime</div>
+                    </div>
+                    <div class="l-stat">
+                        <div class="l-stat-n">ISO</div>
+                        <div class="l-stat-k">Certified</div>
+                    </div>
+                </div>
+
+                <!-- Clients -->
+                <div class="l-clients">
+                    <div class="l-clients-label">Trusted by teams at</div>
+                    <div class="l-client-row">
+                        <div class="l-client-chip"><span class="chip-dot"></span>Nexcorp</div>
+                        <div class="l-client-chip"><span class="chip-dot"></span>Vertex Group</div>
+                        <div class="l-client-chip"><span class="chip-dot"></span>PrimeHR</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom -->
+            <div class="l-bottom">
+                <div class="l-bottom-copy">&copy; 2025 StaffPortal EMS. All rights reserved.</div>
+                <div class="l-bottom-badge">
+                    <svg width="8" height="8" fill="none" viewBox="0 0 10 10" stroke="rgba(255,255,255,.3)" stroke-width="1.4">
+                        <path d="M5 1L1.5 2.5v3C1.5 7.5 3 9 5 9.5 7 9 8.5 7.5 8.5 5.5v-3L5 1z"/>
+                    </svg>
+                    256-bit SSL
+                </div>
+            </div>
+
+        </div>
     </div>
+
+    <!-- ══ RIGHT — no card, no grid ══ -->
+    <div class="ems-right">
+        <div class="ems-form-wrap">
+
+            <!-- Mobile brand -->
+            <div class="mob-brand">
+                <div class="mob-mark">
+                    <svg width="14" height="14" fill="none" viewBox="0 0 20 20" stroke="white" stroke-width="2.2">
+                        <path d="M3 16v-2a4 4 0 014-4h6a4 4 0 014 4v2"/>
+                        <circle cx="10" cy="6" r="3.5"/>
+                    </svg>
+                </div>
+                <span class="mob-name">StaffPortal EMS</span>
+            </div>
+
+            <!-- Head -->
+            <div class="f-head">
+                <div class="f-head-top">
+                    <div class="f-eyebrow">
+                        <span class="f-eyebrow-dot"></span>
+                        Employee Portal
+                    </div>
+                    <div class="f-sso">
+                        <span class="sso-dot"></span>
+                        SSO Active
+                    </div>
+                </div>
+                <div class="f-title">Sign in to your<br/>workspace</div>
+                <div class="f-sub">Use your corporate credentials to continue</div>
+            </div>
+
+            <div class="f-div"></div>
+
+            <!-- Form -->
+            <form id="account" method="post">
+                <div asp-validation-summary="ModelOnly" class="val-sum" role="alert"></div>
+
+                <div class="field">
+                    <label asp-for="Input.Email" class="flabel">Work Email Address</label>
+                    <div class="fiw">
+                        <span class="fic">
+                            <svg width="13" height="13" fill="none" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.6">
+                                <rect x="1" y="3" width="12" height="8" rx="1.5"/>
+                                <path d="M1 5l6 3.5L13 5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                        <input asp-for="Input.Email" class="finput"
+                               placeholder="you@company.com"
+                               autocomplete="username" aria-required="true" />
+                    </div>
+                    <span asp-validation-for="Input.Email" class="ferr"></span>
+                </div>
+
+                <div class="field">
+                    <div class="frow">
+                        <label asp-for="Input.Password" class="flabel">Password</label>
+                        <a asp-page="./ForgotPassword" class="fforgot">Forgot password?</a>
+                    </div>
+                    <div class="fiw">
+                        <span class="fic">
+                            <svg width="13" height="13" fill="none" viewBox="0 0 14 14" stroke="currentColor" stroke-width="1.6">
+                                <rect x="3" y="6" width="8" height="6" rx="1.5"/>
+                                <path d="M5 6V4.5a2 2 0 014 0V6" stroke-linecap="round"/>
+                            </svg>
+                        </span>
+                        <input asp-for="Input.Password" class="finput"
+                               placeholder="Enter your password"
+                               autocomplete="current-password" aria-required="true" />
+                    </div>
+                    <span asp-validation-for="Input.Password" class="ferr"></span>
+                </div>
+
+                <div class="rem-row">
+                    <div class="rem-l">
+                        <input class="rem-chk" asp-for="Input.RememberMe" id="remMe" />
+                        <label class="rem-lbl" for="remMe">Keep me signed in</label>
+                    </div>
+                    <div class="rem-r">Session: 8 hrs</div>
+                </div>
+
+                <button id="login-submit" type="submit" class="sub-btn">
+                    <svg width="14" height="14" fill="none" viewBox="0 0 14 14" stroke="currentColor" stroke-width="2">
+                        <path d="M5.5 7h6M9 4.5L11.5 7 9 9.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M7.5 3H4a1 1 0 00-1 1v6a1 1 0 001 1h3.5" stroke-linecap="round"/>
+                    </svg>
+                    Sign In to Dashboard
+                </button>
+            </form>
+
+            <!-- Social -->
+            <div class="or-div">or sign in with</div>
+            <div class="soc-grid">
+                <form asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <button type="submit" class="soc-btn" name="provider" value="Google">
+                        <svg width="14" height="14" viewBox="0 0 24 24">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                        </svg>
+                        Google
+                    </button>
+                </form>
+                <form asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <button type="submit" class="soc-btn" name="provider" value="GitHub">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#24292e">
+                            <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                        </svg>
+                        GitHub
+                    </button>
+                </form>
+                <form asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" style="grid-column:1/-1">
+                    <button type="submit" class="soc-btn full" name="provider" value="Microsoft">
+                        <svg width="14" height="14" viewBox="0 0 24 24">
+                            <path d="M11.4 2H2v9.4h9.4V2z" fill="#f25022"/>
+                            <path d="M22 2h-9.4v9.4H22V2z" fill="#7fba00"/>
+                            <path d="M11.4 12.6H2V22h9.4v-9.4z" fill="#00a4ef"/>
+                            <path d="M22 12.6h-9.4V22H22v-9.4z" fill="#ffb900"/>
+                        </svg>
+                        Continue with Microsoft
+                    </button>
+                </form>
+            </div>
+
+            <!-- Trust -->
+            <div class="trust-row">
+                <div class="trust-item">
+                    <svg width="10" height="10" fill="none" viewBox="0 0 10 10" stroke="#94A3B8" stroke-width="1.4">
+                        <path d="M5 1L1.5 2.5v3C1.5 7.5 3 9 5 9.5 7 9 8.5 7.5 8.5 5.5v-3L5 1z"/>
+                    </svg>
+                    SOC 2 Type II
+                </div>
+                <div class="trust-sep"></div>
+                <div class="trust-item">
+                    <svg width="10" height="10" fill="none" viewBox="0 0 10 10" stroke="#94A3B8" stroke-width="1.4">
+                        <rect x="1" y="4" width="8" height="5" rx="1.2"/>
+                        <path d="M3 4V3a2 2 0 014 0v1" stroke-linecap="round"/>
+                    </svg>
+                    GDPR Ready
+                </div>
+                <div class="trust-sep"></div>
+                <div class="trust-item">
+                    <svg width="10" height="10" fill="none" viewBox="0 0 10 10" stroke="#94A3B8" stroke-width="1.4">
+                        <circle cx="5" cy="5" r="4"/>
+                        <path d="M3.5 5l1 1L6.5 4" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    MFA Enforced
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="f-foot">
+                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="foot-a">
+                    New employee? <strong>Request Portal Access</strong>
+                </a>
+                <a asp-page="./ResendEmailConfirmation" class="foot-sm">Resend email verification</a>
+            </div>
+
+        </div>
+    </div>
+
 </div>
 
 @section Scripts {
