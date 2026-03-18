@@ -1,108 +1,249 @@
 @model EmployeesManagement.Models.LeaveApplication
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Leave Application Details";
+
+    var status = Model.Status?.Description ?? "Unknown";
+
+    var statusTheme = status switch
+    {
+        "Pending" => "bg-amber-50 border-amber-200 text-amber-700 dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-400",
+        "Approved" => "bg-emerald-50 border-emerald-200 text-emerald-700 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-400",
+        "Rejected" => "bg-rose-50 border-rose-200 text-rose-700 dark:bg-rose-900/20 dark:border-rose-800 dark:text-rose-400",
+        _ => "bg-slate-50 border-slate-200 text-slate-700 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-400"
+    };
+
+    var firstInitial = !string.IsNullOrEmpty(Model.Employee?.FirstName) ? Model.Employee.FirstName.Substring(0,1) : "";
+    var lastInitial = !string.IsNullOrEmpty(Model.Employee?.LastName) ? Model.Employee.LastName.Substring(0,1) : "";
 }
 
-<h1>Details</h1>
+<style>
+@@keyframes fadeInUp {
+    from { opacity:0; transform:translateY(10px);}
+    to { opacity:1; transform:translateY(0);}
+}
 
-<div>
-    <h4>LeaveApplication</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Employee)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Employee.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.NoOfDays)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.NoOfDays)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.StartDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.StartDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Duration)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Duration.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.LeaveType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.LeaveType.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Attachment)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Attachment)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ApprovedById)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ApprovedById)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ApprovedOn)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ApprovedOn)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedById)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedById)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedOn)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedOn)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedById)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedById)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedOn)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedOn)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+.animate-fade-in{
+    animation:fadeInUp .35s ease-out forwards;
+}
+</style>
+
+
+<div class="max-w-7xl mx-auto px-6 pt-3 pb-6 sm:px-8 lg:px-10 animate-fade-in">
+
+    <!-- PAGE HEADER -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+
+        <div>
+            <nav class="flex mb-1">
+                <ol class="inline-flex items-center space-x-2 text-xs font-medium text-gray-500 dark:text-gray-400">
+                    <li>Leave Management</li>
+                    <li><i class="bi bi-chevron-right"></i></li>
+                    <li class="text-indigo-600 dark:text-indigo-400">Details</li>
+                </ol>
+            </nav>
+
+            <h1 class="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                Leave Request
+            </h1>
+        </div>
+
+        <div class="flex items-center gap-3">
+
+            <a asp-action="Index"
+               class="inline-flex items-center px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:text-indigo-600 transition-all shadow-sm dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 dark:hover:bg-slate-700">
+                <i class="bi bi-arrow-left mr-2"></i>
+                Back
+            </a>
+
+            <a asp-action="Edit" asp-route-id="@Model.Id"
+               class="inline-flex items-center px-4 py-2 text-sm font-bold text-white bg-indigo-600 rounded-lg shadow hover:bg-indigo-700 transition-all">
+                <i class="bi bi-pencil-square mr-2"></i>
+                Modify
+            </a>
+
+        </div>
+    </div>
+
+
+
+    <!-- MAIN CARD -->
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl overflow-hidden">
+
+
+        <!-- STATUS BAR -->
+        <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between @statusTheme">
+
+            <div class="flex items-center space-x-2">
+
+                <span class="relative flex h-3 w-3">
+                    <span class="relative inline-flex rounded-full h-3 w-3
+                    @(status=="Approved" ? "bg-emerald-500"
+                      : status=="Rejected" ? "bg-rose-500"
+                      : "bg-amber-500")">
+                    </span>
+                </span>
+
+                <span class="text-xs font-bold uppercase tracking-wider">
+                    Application @status
+                </span>
+
+            </div>
+
+            <span class="text-xs opacity-70 font-medium">
+                ID: #@Model.Id
+            </span>
+
+        </div>
+
+
+
+        <!-- CONTENT -->
+        <div class="p-6 lg:p-8">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                <!-- LEFT SIDE -->
+                <div class="space-y-6">
+
+                    <!-- EMPLOYEE INFO -->
+                    <section>
+
+                        <h3 class="flex items-center text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">
+                            <i class="bi bi-person-badge mr-2 text-indigo-500"></i>
+                            Employee Information
+                        </h3>
+
+                        <div class="flex items-center space-x-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+
+                            <div class="h-12 w-12 rounded-full bg-indigo-100 dark:bg-indigo-900/40 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold">
+                                @firstInitial@lastInitial
+                            </div>
+
+                            <div>
+
+                                <p class="text-base font-semibold text-slate-900 dark:text-white">
+                                    @($"{Model.Employee?.FirstName} {Model.Employee?.LastName}")
+                                </p>
+
+                                <p class="text-xs text-slate-500 dark:text-slate-400">
+                                    Employee ID: @Model.EmployeeId
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </section>
+
+
+
+                    <!-- LEAVE TYPE -->
+                    <section class="grid grid-cols-2 gap-6">
+
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">
+                                Leave Type
+                            </h4>
+
+                            <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 bg-indigo-50 dark:bg-indigo-900/20 px-3 py-1.5 rounded-md inline-block">
+                                @Model.LeaveType?.Name
+                            </p>
+                        </div>
+
+
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">
+                                Total Duration
+                            </h4>
+
+                            <p class="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                                @Model.NoOfDays
+                                <span class="text-slate-500 font-normal">Days</span>
+                            </p>
+                        </div>
+
+                    </section>
+
+
+
+                    <!-- DATES -->
+                    <section>
+
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
+                            Calendar Period
+                        </h4>
+
+                        <div class="flex items-center space-x-4">
+
+                            <div class="flex-1 p-3 rounded-lg border border-slate-200 dark:border-slate-800 text-center">
+                                <span class="block text-[10px] text-slate-400 uppercase mb-1">
+                                    From
+                                </span>
+
+                                <span class="text-sm font-bold text-slate-700 dark:text-slate-300">
+                                    @Model.StartDate.ToString("MMM dd, yyyy")
+                                </span>
+                            </div>
+
+
+                            <i class="bi bi-arrow-right text-slate-300"></i>
+
+
+                            <div class="flex-1 p-3 rounded-lg border border-slate-200 dark:border-slate-800 text-center">
+                                <span class="block text-[10px] text-slate-400 uppercase mb-1">
+                                    To
+                                </span>
+
+                                <span class="text-sm font-bold text-slate-700 dark:text-slate-300">
+                                    @Model.EndDate.ToString("MMM dd, yyyy")
+                                </span>
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+
+
+                <!-- RIGHT SIDE -->
+                <div class="space-y-6">
+
+                    <section class="h-full flex flex-col">
+
+                        <h3 class="flex items-center text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">
+                            <i class="bi bi-chat-left-text mr-2 text-indigo-500"></i>
+                            Reason / Description
+                        </h3>
+
+
+                        <div class="flex-1 min-h-[160px] p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-dashed border-slate-200 dark:border-slate-700">
+
+                            @if (string.IsNullOrWhiteSpace(Model.Description))
+                            {
+                                <p class="text-sm italic text-slate-400">
+                                    No description provided for this request.
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
+                                    @Model.Description
+                                </p>
+                            }
+
+                        </div>
+
+                    </section>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>

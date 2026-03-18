@@ -1,0 +1,212 @@
+@model EmployeesManagement.Models.LeaveApplication
+
+@{
+    ViewData["Title"] = "Leave Approval";
+
+    var status = Model.Status?.Description ?? "Pending";
+
+    var firstInitial = !string.IsNullOrEmpty(Model.Employee?.FirstName) ? Model.Employee.FirstName.Substring(0, 1) : "";
+    var lastInitial = !string.IsNullOrEmpty(Model.Employee?.LastName) ? Model.Employee.LastName.Substring(0, 1) : "";
+}
+
+<div class="max-w-6xl mx-auto px-6 pt-4 pb-6">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center mb-4">
+
+        <div>
+            <h1 class="text-2xl font-bold text-slate-900">
+                Leave Approval
+            </h1>
+            <p class="text-sm text-gray-500">
+                Review and approve employee leave request
+            </p>
+        </div>
+
+        <a asp-action="Index" class="px-4 py-2 border rounded-lg text-sm hover:bg-gray-50">
+            Back
+        </a>
+
+    </div>
+
+
+    <form method="post" asp-action="ApproveLeave">
+
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <!-- CARD -->
+        <div class="bg-white border rounded-2xl shadow-lg">
+
+            <!-- STATUS -->
+            <div class="px-6 py-4 border-b flex justify-between items-center">
+
+                <span class="text-sm font-semibold text-gray-600">
+                    Application Status
+                </span>
+
+                <span
+                    class="px-3 py-1 rounded-full text-xs font-semibold
+                    @(status == "Approved" ? "bg-green-100 text-green-700" :
+                                                                                                                status == "Rejected" ? "bg-red-100 text-red-700" :
+                                                                                                                "bg-yellow-100 text-yellow-700")">
+                    @status
+                </span>
+
+            </div>
+
+
+            <!-- CONTENT -->
+            <div class="p-6 grid md:grid-cols-2 gap-8">
+
+                <!-- LEFT -->
+                <div class="space-y-6">
+
+                    <!-- EMPLOYEE -->
+                    <div>
+
+                        <h4 class="text-xs uppercase text-gray-400 mb-2">
+                            Employee
+                        </h4>
+
+                        <div class="flex items-center space-x-3">
+
+                            <div
+                                class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center font-bold text-indigo-600">
+                                @firstInitial@lastInitial
+                            </div>
+
+                            <div>
+                                <p class="font-semibold">
+                                    @Model.Employee?.FirstName @Model.Employee?.LastName
+                                </p>
+                                <p class="text-xs text-gray-500">
+                                    Employee ID: @Model.EmployeeId
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- LEAVE TYPE -->
+                    <div>
+
+                        <h4 class="text-xs uppercase text-gray-400 mb-1">
+                            Leave Type
+                        </h4>
+
+                        <p class="font-semibold text-sm">
+                            @Model.LeaveType?.Name
+                        </p>
+
+                    </div>
+
+
+                    <!-- TOTAL DAYS -->
+                    <div>
+
+                        <h4 class="text-xs uppercase text-gray-400 mb-1">
+                            Total Days
+                        </h4>
+
+                        <p class="font-semibold text-sm">
+                            @Model.NoOfDays Days
+                        </p>
+
+                    </div>
+
+
+                    <!-- DATE -->
+                    <div>
+
+                        <h4 class="text-xs uppercase text-gray-400 mb-1">
+                            Start Date
+                        </h4>
+
+                        <p class="font-semibold text-sm">
+                            @Model.StartDate.ToString("MMM dd, yyyy")
+                        </p>
+
+                    </div>
+
+                    <div>
+
+                        <h4 class="text-xs uppercase text-gray-400 mb-1">
+                            End Date
+                        </h4>
+
+                        <p class="font-semibold text-sm">
+                            @Model.EndDate.ToString("MMM dd, yyyy")
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RIGHT -->
+                <div>
+
+                    <h4 class="text-xs uppercase text-gray-400 mb-2">
+                        Reason
+                    </h4>
+
+                    <div class="border rounded-lg p-4 bg-gray-50 min-h-[120px]">
+
+                        @if (string.IsNullOrWhiteSpace(Model.Description))
+                        {
+                            <span class="text-gray-400 text-sm">
+                                No description provided
+                            </span>
+                        }
+                        else
+                        {
+                            <p class="text-sm text-gray-700">
+                                @Model.Description
+                            </p>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+            <!-- APPROVAL NOTES -->
+            <div class="mt-6">
+
+                <h4 class="text-xs uppercase text-gray-400 mb-2">
+                    Approval Notes
+                </h4>
+
+                <textarea asp-for="ApprovalNotes" rows="4"
+                          class="w-full border rounded-lg p-3 text-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                              placeholder="Enter approval or rejection notes...">
+    </textarea>
+
+                    <span asp-validation-for="ApprovalNotes" class="text-red-500 text-xs"></span>
+
+                </div>
+
+
+                <!-- APPROVAL ACTIONS -->
+                <div class="flex justify-end gap-3 border-t p-6">
+
+                    <!-- Reject -->
+                    <button type="submit" formaction="@Url.Action("RejectLeave", "LeaveApplications")"
+                            class="px-5 py-2 rounded-lg text-sm font-semibold bg-red-500 text-white hover:bg-red-600">
+                        Reject
+                    </button>
+
+                    <!-- Approve -->
+                    <button type="submit" formaction="@Url.Action("ApproveLeave", "LeaveApplications")"
+                            class="px-5 py-2 rounded-lg text-sm font-semibold bg-green-600 text-white hover:bg-green-700">
+                        Approve
+                    </button>
+
+                </div>
+            </div>
+
+        </form>
+
+    </div>

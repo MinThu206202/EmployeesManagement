@@ -1,6 +1,7 @@
 using EmployeesManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using EmployeesManagement.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,15 +12,20 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     ));
 
 // Identity
-builder.Services.AddDefaultIdentity<IdentityUser>(options =>
-    options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
 // MVC
 builder.Services.AddControllersWithViews();
 
 // ADD THIS
 builder.Services.AddRazorPages();
+
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
