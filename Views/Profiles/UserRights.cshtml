@@ -1,0 +1,127 @@
+@model EmployeesManagement.ViewModels.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Assign User Rights";
+}
+
+<!-- Header -->
+<div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold text-gray-800 dark:text-white">
+        Assign User Rights
+    </h2>
+
+    <a asp-action="Index"
+           class="px-3 py-1.5 text-xs bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-300">
+        Back
+    </a>
+</div>
+
+<!-- Card -->
+<div
+    class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+
+    <form asp-action="UserGroupRights" method="post">
+
+        <input type="hidden" name="RoleId" value="@Model.RoleId" />
+
+        <!-- Table -->
+        <div class="overflow-x-auto h-[500px] overflow-y-auto">
+
+            <table class="w-full text-left border-collapse text-sm">
+
+                <!-- Header -->
+                <thead>
+                    <tr class="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-700">
+                        <th class="px-6 py-3 text-xs font-bold uppercase text-gray-500">Module</th>
+                        <th class="px-6 py-3 text-xs font-bold uppercase text-gray-500">SubModule</th>
+                        <th class="px-6 py-3 text-xs font-bold uppercase text-gray-500">Action</th>
+                        <th class="px-6 py-3 text-xs font-bold uppercase text-gray-500 text-center">Assign</th>
+                    </tr>
+                </thead>
+
+                <!-- Body -->
+                <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                    @if (Model.Profiles != null)
+                    {
+                        foreach (var module in Model.Profiles.Where(x => x.ProfileId == null))
+                        {
+                            <!-- MODULE -->
+                            <tr class="bg-indigo-50 dark:bg-indigo-900/20">
+                                <td colspan="4" class="px-6 py-3 font-bold text-indigo-700 dark:text-indigo-300">
+                                    @module.Name
+                                </td>
+                            </tr>
+
+                            if (module.Children != null && module.Children.Any())
+                            {
+                                foreach (var submodule in module.Children)
+                                {
+                                    <!-- SUBMODULE -->
+                                    <tr class="bg-gray-50 dark:bg-gray-700/30">
+                                        <td></td>
+                                        <td class="px-6 py-2 font-semibold text-gray-700 dark:text-gray-200">
+                                            <input type="hidden" name="RolesProfilesIds[]" value="@submodule.Id" />
+                                            @submodule.Name
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+
+                                    foreach (var actions in submodule.Children)
+                                    {
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition">
+
+                                            <td></td>
+                                            <td></td>
+
+                                            <!-- Action -->
+                                            <td class="px-6 py-2 text-gray-600 dark:text-gray-300">
+                                                @actions.Name
+                                            </td>
+
+                                            <!-- Checkbox -->
+                                            <td class="px-6 py-2 text-center">
+                                                <input type="checkbox" name="Ids[]" value="@actions.Id"
+                                                       class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                                @(Model.RolesProfilesIds.Contains(actions.Id) ? "checked" : "") />
+                                            </td>
+
+                                        </tr>
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    <!-- EMPTY STATE -->
+                    @if (Model.Profiles == null || !Model.Profiles.Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="px-6 py-12 text-center text-gray-500">
+                                No permissions found
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t flex justify-between items-center">
+
+            <span class="text-xs text-gray-500 uppercase font-bold">
+                Role Permissions
+            </span>
+
+            <button type="submit"
+                    class="px-6 py-2 text-xs font-bold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 transition">
+                Save Rights
+            </button>
+
+        </div>
+
+    </form>
+</div>

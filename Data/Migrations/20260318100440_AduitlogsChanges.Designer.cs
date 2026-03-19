@@ -4,6 +4,7 @@ using EmployeesManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EmployeesManagement.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260318100440_AduitlogsChanges")]
+    partial class AduitlogsChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -495,30 +498,6 @@ namespace EmployeesManagement.Data.Migrations
                     b.ToTable("LeaveTypes");
                 });
 
-            modelBuilder.Entity("EmployeesManagement.Models.RoleProfile", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("TaskId")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("TaskId");
-
-                    b.ToTable("RoleProfiles");
-                });
-
             modelBuilder.Entity("EmployeesManagement.Models.SystemCode", b =>
                 {
                     b.Property<int>("Id")
@@ -816,25 +795,6 @@ namespace EmployeesManagement.Data.Migrations
                     b.Navigation("LeaveType");
 
                     b.Navigation("Status");
-                });
-
-            modelBuilder.Entity("EmployeesManagement.Models.RoleProfile", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EmployeesManagement.Models.SystemProfile", "Task")
-                        .WithMany()
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
-
-                    b.Navigation("Task");
                 });
 
             modelBuilder.Entity("EmployeesManagement.Models.SystemCodeDetail", b =>
