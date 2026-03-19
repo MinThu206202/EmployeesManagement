@@ -120,6 +120,34 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="relative">
+                                        <button onclick="toggleMenu('systemSecurityMenu', this)"
+                                                class="flex items-center w-full px-4 py-3 text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-xl transition-all">
+                            <i class="bi bi-calendar-check-fill mr-4 text-lg"></i>
+                            <span class="sidebar-text font-medium flex-grow text-left">System Security</span>
+                            <i class="bi bi-chevron-down text-[10px] chevron-icon"></i>
+                        </button>
+                                        <div id="systemSecurityMenu" class="submenu-container relative">
+                            <div class="submenu-line sidebar-text"></div>
+                            <div class="pl-12 pr-4 py-1 space-y-1">
+                                <a asp-action="index" asp-controller="Users" class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">System User</a>
+                                    <a asp-action="index" asp-controller="Roles"
+                                           class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">System Role</a>
+                                        <a asp-action="index" asp-controller="SystemProfiles"
+                                           class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">System                                          Profile</a>
+                                                            <a asp-action="index" asp-controller="Audits"
+                                                                   class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">System
+                                                                AuditLogs</a>
+                                                                <a asp-action="index" asp-controller="Profiles"
+                                                                       class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">User Roles</a>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
                     <p class="text-[11px] font-bold text-slate-500 uppercase px-3 py-2 mt-6 mb-1 tracking-widest sidebar-text">
                         System
                     </p>
@@ -134,12 +162,7 @@
                         
                         <div id="systemMenu" class="submenu-container relative">
                             <div class="submenu-line sidebar-text"></div>
-                            <div class="pl-12 pr-4 py-1 space-y-1">
-                                    <a asp-action="Index" asp-controller="Users"
-                                    class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">System                                  Users</a>
-                                                    <a asp-action="Index" asp-controller="Roles"
-                                                           class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">System Roles</a>
-                                    <a asp-action="Index" asp-controller="Designations"
+                            <div class="pl-12 pr-4 py-1 space-y-1">                                    <a asp-action="Index" asp-controller="Designations"
                                            class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">Designations</a>
                                     <a asp-action="Index" asp-controller="Departments" class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">Deprtments</a>
                                     <a asp-action="Index" asp-controller="Banks" class="block py-2 text-sm text-slate-400 hover:text-indigo-400 transition-colors">Banks</a>
