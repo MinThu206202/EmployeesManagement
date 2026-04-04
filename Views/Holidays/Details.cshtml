@@ -1,0 +1,63 @@
+@model EmployeesManagement.Models.Holiday
+
+@{
+    ViewData["Title"] = "Holiday Details";
+}
+
+<!-- Page Header -->
+<div class="flex items-center justify-between mb-4">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Holiday Details</h2>
+    <a asp-action="Edit" asp-route-id="@Model?.id"
+           class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-lg shadow transition-colors">
+        <i class="bi bi-pencil mr-1"></i> Edit
+    </a>
+</div>
+
+<!-- Details Card -->
+<div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-lg p-6 space-y-4">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700 dark:text-gray-300">
+
+        <div>
+            <span class="font-semibold">Title:</span> @Model.Title
+        </div>
+
+        <div>
+            <span class="font-semibold">Start Date:</span> @Model.StartDate.ToString("MMM dd, yyyy")
+        </div>
+
+        <div>
+            <span class="font-semibold">End Date:</span> @Model.EndDate.ToString("MMM dd, yyyy")
+        </div>
+
+        <div class="col-span-1 md:col-span-2">
+            <span class="font-semibold">Description:</span> @Model.Description
+        </div>
+
+        <div>
+            <span class="font-semibold">Created By:</span> @Model.CreatedById
+        </div>
+
+        <div>
+            <span class="font-semibold">Created On:</span> @Model.CreatedOn.ToString("MMM dd, yyyy")
+        </div>
+
+        <div>
+            <span class="font-semibold">Modified By:</span> @Model.ModifiedById
+        </div>
+
+        <div>
+            <span class="font-semibold">Modified On:</span> @Model.ModifiedOn.ToString("MMM dd, yyyy")
+        </div>
+
+    </div>
+
+    <!-- Footer Actions -->
+    <div class="flex justify-end space-x-3 mt-4">
+        <a asp-action="Index"
+               class="px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all">
+            Back to List
+        </a>
+    </div>
+
+</div>

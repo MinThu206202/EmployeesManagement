@@ -1,0 +1,154 @@
+@model IEnumerable<EmployeesManagement.Models.Employee>
+
+@{
+    ViewData["Title"] = "Leave Balance";
+}
+
+<!-- Page Header -->
+<div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold text-gray-800 dark:text-white">
+        Leave Balance
+    </h2>
+</div>
+
+<!-- Table Container -->
+<div
+    class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+
+    <!-- Scrollable Table -->
+    <div class="overflow-x-auto h-[500px] overflow-y-auto">
+        <table class="w-full text-left border-collapse">
+
+            <!-- Table Head -->
+            <thead>
+                <tr class="bg-gray-50 dark:bg-gray-900/50 border-b">
+
+                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500">
+                        Emp No
+                    </th>
+
+                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500">
+                        Full Name
+                    </th>
+
+                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500">
+                        Allocated Leave Balance
+                    </th>
+
+                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500">
+                        Leave Balance
+                    </th>
+
+                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500 text-right">
+                        Actions
+                    </th>
+
+                </tr>
+            </thead>
+
+            <!-- Table Body -->
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                @foreach (var item in Model)
+                {
+                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition">
+
+                        <!-- Emp No -->
+                        <td class="px-6 py-4">
+                            <span
+                                class="px-2 py-1 text-xs font-medium rounded bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300">
+                                #@item.EmpNo
+                            </span>
+                        </td>
+
+                        <!-- Full Name -->
+                        <td class="px-6 py-4">
+                            <div class="flex items-center">
+                                <div
+                                    class="h-9 w-9 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 font-bold text-sm">
+                                    @(item.FirstName?.Substring(0, 1))@(item.LastName?.Substring(0, 1))
+                                </div>
+
+                                <div class="ml-4 text-sm font-semibold text-gray-900 dark:text-white">
+                                    @item.FirstName @item.MiddleName @item.LastName
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Allocated Leave -->
+                        <td class="px-6 py-4">
+                            <span
+                                class="px-2 py-1 text-xs font-semibold rounded-md bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300">
+                                @item.AllocatedLeaveDays
+                            </span>
+                        </td>
+
+                        <!-- Leave Balance -->
+                        <td class="px-6 py-4">
+                            <span
+                                class="px-2 py-1 text-xs font-semibold rounded-md bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                                @item.LeaveOutStandingBalance
+                            </span>
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="px-6 py-4 text-right">
+                            <div class="inline-flex rounded-lg shadow-sm border border-gray-200 dark:border-gray-600">
+
+                                <!-- View -->
+                                <a asp-action="Details" asp-route-id="@item.Id"
+                                       class="px-3 py-1.5 text-xs bg-white dark:bg-gray-800 hover:bg-gray-50 border-r">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+
+                                <!-- Adjust -->
+                                <a asp-controller="LeaveBalances" asp-action="AdjustLeaveBalance"
+                                       asp-route-employeeId="@item.Id"
+                                       class="px-3 py-1.5 text-xs text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-r-lg">
+                                    <i class="bi bi-sliders"></i>
+                                </a>
+
+                            </div>
+                        </td>
+
+                    </tr>
+                }
+
+                <!-- Empty State -->
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="px-6 py-16 text-center text-gray-500 dark:text-gray-400">
+
+                            <div class="flex flex-col items-center">
+                                <i class="bi bi-people text-4xl mb-3"></i>
+
+                                <p class="text-sm mb-3">
+                                    No Employees Found
+                                </p>
+                            </div>
+
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Footer -->
+    <div
+        class="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t flex justify-between text-xs text-gray-500 uppercase font-bold">
+
+        <span>
+            Showing @Model.Count() Employees
+        </span>
+
+        <div class="flex space-x-1">
+            <button class="px-2 py-1 border rounded">Prev</button>
+            <button class="px-2 py-1 border rounded">Next</button>
+        </div>
+
+    </div>
+
+</div>
