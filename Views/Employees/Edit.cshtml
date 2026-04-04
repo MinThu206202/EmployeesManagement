@@ -11,7 +11,7 @@
         font-family: 'Inter', sans-serif;
         background-color: #f8fafc;
     }
-    
+
     .font-mono-sys { font-family: 'JetBrains Mono', monospace; }
 
     @@keyframes fadeIn {
@@ -43,12 +43,11 @@
 </style>
 
 <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-
-    <form asp-action="Edit">
-        <div asp-validation-summary="ModelOnly" class="text-red-500 mb-6 p-4 bg-red-50 border border-red-100 rounded-xl text-sm"></div>
+    <form asp-action="Edit" method="post">
         <input type="hidden" asp-for="Id" />
+        <div asp-validation-summary="ModelOnly" class="text-red-500 mb-6 p-4 bg-red-50 border border-red-100 rounded-xl text-sm"></div>
 
-        <!-- Header Navigation -->
+        <!-- Header -->
         <div class="flex items-center justify-between mb-8 anim-fade">
             <div>
                 <a asp-action="Index" class="inline-flex items-center px-3 py-2 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-100 transition-all">
@@ -65,32 +64,38 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
-            <!-- Left Sidebar: Key Identifiers -->
+            <!-- Sidebar: Identifiers & Meta -->
             <div class="space-y-6 anim-fade">
+
+                <!-- System Identifiers -->
                 <div class="glass-card rounded-2xl p-6 shadow-sm">
                     <h3 class="section-label mb-6">System Identifiers</h3>
-                    
                     <div class="space-y-4">
                         <div>
                             <label asp-for="EmpNo" class="block text-xs font-semibold text-slate-500 mb-1">Employee ID Number</label>
                             <input asp-for="EmpNo" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono-sys text-blue-700 form-input-focus transition-all" />
                             <span asp-validation-for="EmpNo" class="text-[10px] text-red-500 mt-1 block"></span>
                         </div>
-                        
                         <div>
-                            <label asp-for="Department" class="block text-xs font-semibold text-slate-500 mb-1">Assigned Department</label>
-                            <input asp-for="Department" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all" />
-                            <span asp-validation-for="Department" class="text-[10px] text-red-500 mt-1 block"></span>
-                        </div>
-
+    <label asp-for="DepartmentId" class="block text-xs font-semibold text-slate-500 mb-1">Department</label>
+    <select asp-for="DepartmentId" asp-items="ViewBag.DepartmentId" 
+            class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all">
+        <option value="">-- Select Department --</option>
+    </select>
+    <span asp-validation-for="DepartmentId" class="text-[10px] text-red-500 mt-1 block"></span>
+</div>
                         <div>
-                            <label asp-for="Designation" class="block text-xs font-semibold text-slate-500 mb-1">Job Designation</label>
-                            <input asp-for="Designation" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all" />
-                            <span asp-validation-for="Designation" class="text-[10px] text-red-500 mt-1 block"></span>
-                        </div>
+    <label asp-for="DesignationId" class="block text-xs font-semibold text-slate-500 mb-1">Designation</label>
+    <select asp-for="DesignationId" asp-items="ViewBag.DesignationId" 
+            class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all">
+        <option value="">-- Select Designation --</option>
+    </select>
+    <span asp-validation-for="DesignationId" class="text-[10px] text-red-500 mt-1 block"></span>
+</div>
                     </div>
                 </div>
 
+                <!-- Meta Information -->
                 <div class="bg-slate-800 rounded-2xl p-6 text-white shadow-lg">
                     <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Meta Information</h3>
                     <div class="space-y-4 opacity-80">
@@ -109,69 +114,76 @@
             </div>
 
             <!-- Main Panel: Personal & Contact Info -->
-            <div class="lg:col-span-2 space-y-6 anim-fade" style="animation-delay: 0.1s;">
-                
-                <!-- Personal Information -->
+            <div class="lg:col-span-2 space-y-6 anim-fade">
+
+                <!-- Legal Name & Identity -->
                 <div class="glass-card rounded-2xl shadow-sm overflow-hidden">
                     <div class="px-8 py-4 border-b border-slate-100 bg-slate-50/50">
                         <h3 class="section-label">Legal Name & Identity</h3>
                     </div>
-                    <div class="p-8">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div>
-                                <label asp-for="FirstName" class="block text-xs font-semibold text-slate-500 mb-1">First Name</label>
-                                <input asp-for="FirstName" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all" />
-                                <span asp-validation-for="FirstName" class="text-[10px] text-red-500 mt-1 block"></span>
-                            </div>
-                            <div>
-                                <label asp-for="MiddleName" class="block text-xs font-semibold text-slate-500 mb-1">Middle Name</label>
-                                <input asp-for="MiddleName" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all" />
-                                <span asp-validation-for="MiddleName" class="text-[10px] text-red-500 mt-1 block"></span>
-                            </div>
-                            <div>
-                                <label asp-for="LastName" class="block text-xs font-semibold text-slate-500 mb-1">Last Name</label>
-                                <input asp-for="LastName" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all" />
-                                <span asp-validation-for="LastName" class="text-[10px] text-red-500 mt-1 block"></span>
-                            </div>
-                            <div class="md:col-span-2">
-                                <label asp-for="DateOfBirth" class="block text-xs font-semibold text-slate-500 mb-1">Date of Birth</label>
-                                <input asp-for="DateOfBirth" type="date" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all" />
-                                <span asp-validation-for="DateOfBirth" class="text-[10px] text-red-500 mt-1 block"></span>
-                            </div>
-                            <div>
-                                <label asp-for="Country" class="block text-xs font-semibold text-slate-500 mb-1">Country</label>
-                                <input asp-for="Country" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all" />
-                                <span asp-validation-for="Country" class="text-[10px] text-red-500 mt-1 block"></span>
-                            </div>
+                    <div class="p-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label asp-for="FirstName" class="block text-xs font-semibold text-slate-500 mb-1">First Name</label>
+                            <input asp-for="FirstName" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all" />
+                            <span asp-validation-for="FirstName" class="text-[10px] text-red-500 mt-1 block"></span>
                         </div>
+                        <div>
+                            <label asp-for="MiddleName" class="block text-xs font-semibold text-slate-500 mb-1">Middle Name</label>
+                            <input asp-for="MiddleName" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all" />
+                            <span asp-validation-for="MiddleName" class="text-[10px] text-red-500 mt-1 block"></span>
+                        </div>
+                        <div>
+                            <label asp-for="LastName" class="block text-xs font-semibold text-slate-500 mb-1">Last Name</label>
+                            <input asp-for="LastName" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all" />
+                            <span asp-validation-for="LastName" class="text-[10px] text-red-500 mt-1 block"></span>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label asp-for="DateOfBirth" class="block text-xs font-semibold text-slate-500 mb-1">Date of Birth</label>
+                            <input asp-for="DateOfBirth" type="date" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all" />
+                            <span asp-validation-for="DateOfBirth" class="text-[10px] text-red-500 mt-1 block"></span>
+                        </div>
+                        <div>
+    <label asp-for="CountryId" class="block text-xs font-semibold text-slate-500 mb-1">Country</label>
+    <select asp-for="CountryId" asp-items="ViewBag.CountrId" 
+            class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all">
+        <option value="">-- Select Country --</option>
+    </select>
+    <span asp-validation-for="CountryId" class="text-[10px] text-red-500 mt-1 block"></span>
+</div>
                     </div>
+                    <div>
+    <label asp-for="GenderId" class="block text-xs font-semibold text-slate-500 mb-1">Gender</label>
+    <select asp-for="GenderId" asp-items="ViewBag.GenderId" 
+            class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all">
+        <option value="">-- Select Gender --</option>
+    </select>
+    <span asp-validation-for="GenderId" class="text-[10px] text-red-500 mt-1 block"></span>
+</div>
                 </div>
 
-                <!-- Contact & Location -->
+                <!-- Contact & Residential Details -->
                 <div class="glass-card rounded-2xl shadow-sm overflow-hidden">
                     <div class="px-8 py-4 border-b border-slate-100 bg-slate-50/50">
                         <h3 class="section-label">Contact & Residential Details</h3>
                     </div>
-                    <div class="p-8">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <label asp-for="EmailAddress" class="block text-xs font-semibold text-slate-500 mb-1">Email Address</label>
-                                <div class="relative">
-                                    <i class="bi bi-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                                    <input asp-for="EmailAddress" class="w-full pl-11 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all" />
-                                </div>
-                                <span asp-validation-for="EmailAddress" class="text-[10px] text-red-500 mt-1 block"></span>
+                    <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label asp-for="EmailAddress" class="block text-xs font-semibold text-slate-500 mb-1">Email Address</label>
+                            <div class="relative">
+                                <i class="bi bi-envelope absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                <input asp-for="EmailAddress" class="w-full pl-11 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all" />
                             </div>
-                            <div>
-                                <label asp-for="PhoneNumber" class="block text-xs font-semibold text-slate-500 mb-1">Phone Number</label>
-                                <div class="relative">
-                                    <i class="bi bi-telephone absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                                    <input asp-for="PhoneNumber" class="w-full pl-11 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all" />
-                                </div>
-                                <span asp-validation-for="PhoneNumber" class="text-[10px] text-red-500 mt-1 block"></span>
-                            </div>
+                            <span asp-validation-for="EmailAddress" class="text-[10px] text-red-500 mt-1 block"></span>
                         </div>
                         <div>
+                            <label asp-for="PhoneNumber" class="block text-xs font-semibold text-slate-500 mb-1">Phone Number</label>
+                            <div class="relative">
+                                <i class="bi bi-telephone absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                <input asp-for="PhoneNumber" class="w-full pl-11 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all" />
+                            </div>
+                            <span asp-validation-for="PhoneNumber" class="text-[10px] text-red-500 mt-1 block"></span>
+                        </div>
+                        <div class="md:col-span-2">
                             <label asp-for="Address" class="block text-xs font-semibold text-slate-500 mb-1">Residential Address</label>
                             <textarea asp-for="Address" rows="3" class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm form-input-focus transition-all"></textarea>
                             <span asp-validation-for="Address" class="text-[10px] text-red-500 mt-1 block"></span>
@@ -179,11 +191,10 @@
                     </div>
                 </div>
 
+                <!-- Actions -->
                 <div class="flex justify-end gap-3 pt-4">
                     <a asp-action="Index" class="px-6 py-2.5 text-sm font-semibold text-slate-600 hover:text-slate-800 transition-colors">Cancel</a>
-                    <button type="submit" class="px-8 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-100 transition-all">
-                        Update Record
-                    </button>
+                    <button type="submit" class="px-8 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-100 transition-all">Update Record</button>
                 </div>
 
             </div>

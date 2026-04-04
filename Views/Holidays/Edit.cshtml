@@ -1,0 +1,87 @@
+@model EmployeesManagement.Models.Holiday
+
+@{
+    ViewData["Title"] = "Edit Holiday";
+}
+
+<!-- Page Header -->
+<div class="flex items-center justify-between mb-4">
+    <div>
+        <h1 class="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+            Edit Holiday
+        </h1>
+        <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5 flex items-center">
+            <i class="bi bi-info-circle mr-1.5 text-indigo-500"></i>
+            Update holiday information
+        </p>
+    </div>
+
+    <a asp-action="Index"
+           class="inline-flex items-center text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors">
+        <i class="bi bi-arrow-left mr-1.5"></i> Back to List
+    </a>
+</div>
+
+<!-- Form Card -->
+<div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl shadow-lg overflow-hidden">
+
+    <form asp-action="Edit" method="post" class="p-6" enctype="multipart/form-data">
+
+        <div asp-validation-summary="ModelOnly" class="mb-4 text-rose-600 dark:text-rose-400 text-xs"></div>
+
+        <input type="hidden" asp-for="id" />
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <!-- Title -->
+            <div class="space-y-1">
+                <label asp-for="Title" class="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1"></label>
+                <input asp-for="Title"
+                       class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm text-gray-900 dark:text-white" />
+            </div>
+
+            <!-- Start Date -->
+            <div class="space-y-1">
+                <label asp-for="StartDate" class="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1"></label>
+                <input asp-for="StartDate" type="date"
+                       class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm text-gray-900 dark:text-white" />
+            </div>
+
+            <!-- End Date -->
+            <div class="space-y-1">
+                <label asp-for="EndDate" class="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1"></label>
+                <input asp-for="EndDate" type="date"
+                       class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm text-gray-900 dark:text-white" />
+            </div>
+
+            <!-- Description -->
+            <div class="col-span-1 lg:col-span-2 space-y-1">
+                <label asp-for="Description" class="text-xs font-bold text-gray-700 dark:text-gray-300 ml-1"></label>
+                <textarea asp-for="Description" rows="3"
+                          class="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm text-gray-900 dark:text-white"></textarea>
+            </div>
+
+        </div>
+
+        <!-- Footer Buttons -->
+        <div class="flex items-center justify-end mt-6 space-x-3">
+            <a asp-action="Index"
+                   class="px-4 py-2 text-xs font-bold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all">
+                Cancel
+            </a>
+
+            <button type="submit"
+                    class="px-6 py-2 text-xs font-bold text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 transition-all">
+                Save Changes
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

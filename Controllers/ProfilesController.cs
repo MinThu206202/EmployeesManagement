@@ -59,7 +59,7 @@ namespace EmployeesManagement.Models
             // ✅ THIS LINE IS MISSING
             tasks.Profiles = Profiles;
 
-            tasks.RolesProfilesIds = await _context.RoleProfiles
+            tasks.RolesRightsIds = await _context.RoleProfiles
                 .Where(x => x.RoleId == id)
                 .Select(r => r.TaskId)
                 .ToListAsync();
@@ -68,13 +68,15 @@ namespace EmployeesManagement.Models
         }
 
         [HttpPost]
-        public async Task<ActionResult> UserGroupRights(ProfileViewModel vm)
+        public async Task<ActionResult> UserGroupRights(string id, ProfileViewModel vm)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            // remove old rights first (optional but recommended)
-            var existing = _context.RoleProfiles.Where(x => x.RoleId == vm.RoleId);
-            _context.RoleProfiles.RemoveRange(existing);
+            var allrights = await _context.RoleProfiles.Where(x => x.RoleId == id).ToListAsync();
+
+            _context.RoleProfiles.RemoveRange(allrights);
+            await _context.SaveChangesAsync(userId);
+
 
             foreach (var taskId in vm.Ids)
             {
@@ -85,9 +87,10 @@ namespace EmployeesManagement.Models
                 };
 
                 _context.RoleProfiles.Add(role);
+                await _context.SaveChangesAsync(userId);
+
             }
 
-            await _context.SaveChangesAsync(userId);
 
             return RedirectToAction("UserRights", new { id = vm.RoleId });
         }

@@ -6,16 +6,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EmployeesManagement.Data;
 using EmployeesManagement.Models;
+using System.Security.Claims;
 
 namespace EmployeesManagement.Controllers
 {
     public class LeaveApplicationsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IConfiguration _configuration;
 
-        public LeaveApplicationsController(ApplicationDbContext context)
+
+        public LeaveApplicationsController(IConfiguration configuration, ApplicationDbContext context)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         // GET: LeaveApplications
@@ -118,17 +122,44 @@ namespace EmployeesManagement.Controllers
                 .Where(x => x.Code == "Approval" && x.SystemCode.Code == "LeaveApprovalStatus")
                 .FirstOrDefaultAsync();
 
+            var adjustmenttype = await _context.SystemCodeDetails
+                .Include(x => x.SystemCode)
+                .Where(x => x.Code == "Negative" && x.SystemCode.Code == "LeaveAdjustment")
+            .FirstOrDefaultAsync();
+
             var leaveApplication = await _context.leaveApplications
                 .FirstOrDefaultAsync(m => m.Id == leave.Id);
 
             if (leaveApplication == null)
                 return NotFound();
 
+            var Userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             leaveApplication.StatusId = approvedStatus.Id;
             leaveApplication.ApprovedOn = DateTime.Now;
-            leaveApplication.ApprovedById = "Marco Code";
+            leaveApplication.ApprovedById = Userid;
             leaveApplication.ApprovalNotes = leave.ApprovalNotes;
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(Userid);
+
+            var adjustment = new LeaveAdjustmentEntry
+            {
+                EmployeeId = leaveApplication.EmployeeId,
+                NoOfDays = leaveApplication.NoOfDays,
+                LeaveStartDate = leaveApplication.StartDate,
+                LeaveEndDate = leaveApplication.EndDate,
+                AdjustmentDescription = "Leave Taken- Negative Adjustment",
+                LeavePeriodId = 1,
+                LeaveAdjustmentDate = DateTime.Now,
+                AdjustmentTypeId = adjustmenttype.Id
+            };
+            _context.Add(adjustment);
+            await _context.SaveChangesAsync(Userid);
+
+            var employee = await _context.Employees.FindAsync(leaveApplication.EmployeeId);
+            employee.LeaveOutStandingBalance = (employee.AllocatedLeaveDays - leaveApplication.NoOfDays);
+            _context.Update(employee);
+            await _context.SaveChangesAsync(Userid);
+
 
             return RedirectToAction(nameof(Index));
         }
@@ -168,24 +199,33 @@ namespace EmployeesManagement.Controllers
         // POST: LeaveApplications/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(LeaveApplication leaveApplication)
+        public async Task<IActionResult> Create(LeaveApplication leaveApplication, IFormFile leaveattachemnt)
         {
-            if (ModelState.IsValid)
+            if (leaveattachemnt.Length > 0)
             {
-                var pendingStatus = await _context.SystemCodeDetails
+                var fileName = "LeaveAttachment" + DateTime.Now.ToString("yyyymmddhhmmss") + "_" + leaveattachemnt.FileName;
+                var path = _configuration["FileSettings:UploadFolder"]!;
+                var filepath = Path.Combine(path, fileName);
+                var stream = new FileStream(filepath, FileMode.Create);
+                await leaveattachemnt.CopyToAsync(stream);
+                leaveApplication.Attachment = fileName;
+            }
+            var Userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var pendingStatus = await _context.SystemCodeDetails
                     .Include(x => x.SystemCode)
                     .Where(y => y.Code == "AwaitingApproval" && y.SystemCode.Code == "LeaveApprovalStatus")
                     .FirstOrDefaultAsync();
 
-                leaveApplication.CreatedOn = DateTime.Now;
-                leaveApplication.CreatedById = "Marco Code";
-                leaveApplication.StatusId = pendingStatus?.Id ?? 0;
+            leaveApplication.CreatedOn = DateTime.Now;
+            leaveApplication.CreatedById = Userid;
+            leaveApplication.StatusId = pendingStatus?.Id ?? 0;
 
-                _context.Add(leaveApplication);
-                await _context.SaveChangesAsync();
+            _context.Add(leaveApplication);
+            await _context.SaveChangesAsync(Userid);
 
-                return RedirectToAction(nameof(Index));
-            }
+            return RedirectToAction(nameof(Index));
+
 
             await LoadDropdowns();
             return View(leaveApplication);

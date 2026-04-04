@@ -1,0 +1,180 @@
+@model IEnumerable<EmployeesManagement.Models.LeaveAdjustmentEntry>
+
+@{
+    ViewData["Title"] = "Leave Adjustments";
+}
+
+<!-- Page Header -->
+<div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold text-gray-800 dark:text-white">
+        Leave Adjustments
+    </h2>
+
+    <a asp-action="Create"
+           class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow transition-colors">
+        <i class="bi bi-plus-lg mr-2"></i>
+        Add Adjustment
+    </a>
+</div>
+
+<!-- Table Container -->
+<div
+    class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+
+    <!-- Scrollable Table -->
+    <div class="overflow-x-auto h-[500px] overflow-y-auto">
+        <table class="w-full text-left border-collapse">
+
+            <!-- Table Head -->
+            <thead>
+                <tr class="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-100 dark:border-gray-700">
+
+                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500">
+                        Period
+                    </th>
+
+                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500">
+                        Employee
+                    </th>
+
+                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500">
+                        Days
+                    </th>
+
+                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500">
+                        Date
+                    </th>
+
+                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500">
+                        Description
+                    </th>
+
+                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500">
+                        Type
+                    </th>
+
+                    <th class="px-6 py-4 text-xs font-bold uppercase text-gray-500 text-right">
+                        Actions
+                    </th>
+
+                </tr>
+            </thead>
+
+            <!-- Table Body -->
+            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+
+                @foreach (var item in Model)
+                {
+                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition">
+
+                        <!-- Period -->
+                        <td class="px-6 py-4 text-sm font-medium text-gray-900 dark:text-white">
+                            @item.LeavePeriod
+                        </td>
+
+                        <!-- Employee -->
+                        <td class="px-6 py-4">
+                            <div class="text-sm font-semibold text-gray-900 dark:text-white">
+                                @item.Employee?.FullName
+                            </div>
+                            <div class="text-xs text-gray-500">
+                                ID: @item.Employee?.Id
+                            </div>
+                        </td>
+
+                        <!-- Days -->
+                        <td class="px-6 py-4">
+                            <span
+                                class="px-2 py-1 text-xs font-semibold rounded-md bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300">
+                                @item.NoOfDays
+                            </span>
+                        </td>
+
+                        <!-- Date -->
+                        <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                            @item.LeaveAdjustmentDate.ToString("MMM dd, yyyy")
+                        </td>
+
+                        <!-- Description -->
+                        <td class="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
+                            @item.AdjustmentDescription
+                        </td>
+
+                        <!-- Type -->
+                        <td class="px-6 py-4">
+                            <span
+                                class="px-2 py-1 text-xs font-medium rounded-full bg-green-50 text-green-700 dark:bg-green-900/30 dark:text-green-300">
+                                @item.AdjustmentType?.Code
+                            </span>
+                        </td>
+
+                        <!-- Actions -->
+                        <td class="px-6 py-4 text-right">
+                            <div class="inline-flex rounded-lg shadow-sm border border-gray-200 dark:border-gray-600">
+
+                                <a asp-action="Edit" asp-route-id="@item.Id"
+                                       class="px-3 py-1.5 text-xs bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border-r">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+
+                                <a asp-action="Details" asp-route-id="@item.Id"
+                                       class="px-3 py-1.5 text-xs bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border-r">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+
+                                <a asp-action="Delete" asp-route-id="@item.Id"
+                                       class="px-3 py-1.5 text-xs text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-r-lg">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+
+                            </div>
+                        </td>
+
+                    </tr>
+                }
+
+                <!-- Empty State -->
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="7" class="px-6 py-16 text-center text-gray-500 dark:text-gray-400">
+
+                            <div class="flex flex-col items-center">
+
+                                <i class="bi bi-calendar-x text-4xl mb-3"></i>
+
+                                <p class="text-sm mb-3">
+                                    No Leave Adjustments Found
+                                </p>
+
+                                <a asp-action="Create"
+                                       class="px-3 py-1.5 text-xs bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                    Add First Adjustment
+                                </a>
+
+                            </div>
+
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Footer -->
+    <div
+        class="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t flex justify-between text-xs text-gray-500 uppercase font-bold">
+
+        <span>
+            Showing @Model.Count() Records
+        </span>
+
+        <div class="flex space-x-1">
+            <button class="px-2 py-1 border rounded">Prev</button>
+            <button class="px-2 py-1 border rounded">Next</button>
+        </div>
+
+    </div>
+
+</div>

@@ -25,11 +25,11 @@ namespace EmployeesManagement.Models
 
         public string? Attachment { get; set; }
         [Display(Name = "Notes")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
         [Display(Name = "Status")]
         public int StatusId { get; set; }
         public SystemCodeDetail? Status { get; set; }
         [Display(Name = "Approval Notes")]
-        public string ApprovalNotes { get; set; }
+        public string? ApprovalNotes { get; set; }
     }
 }

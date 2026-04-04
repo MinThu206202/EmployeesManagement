@@ -40,6 +40,10 @@ namespace EmployeesManagement.Data
         public DbSet<SystemProfile> SystemProfiles { get; set; }
         public DbSet<Audit> Auditlogs { set; get; }
         public DbSet<RoleProfile> RoleProfiles { set; get; }
+        public DbSet<Holiday> Holidays { set; get; }
+        public DbSet<LeavePeriod> LeavePeriods { set; get; }
+        public DbSet<LeaveAdjustmentEntry> LeaveAdjustmentEntries { set; get; }
+
 
         public virtual async Task<int> SaveChangesAsync(string UserId = null)
         {
