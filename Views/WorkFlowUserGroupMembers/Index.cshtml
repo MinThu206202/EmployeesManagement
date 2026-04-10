@@ -1,0 +1,96 @@
+@model IEnumerable<EmployeesManagement.Models.WorkFlowUserGroupMember>
+
+@{
+    ViewData["Title"] = "WorkFlow Group Members";
+}
+
+<!-- Page Header -->
+<div class="flex justify-between items-center mb-4">
+    <h2 class="text-lg font-semibold text-gray-800 dark:text-white">
+        WorkFlow Group Members
+    </h2>
+
+    <a asp-action="Create"
+       class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow">
+        <i class="bi bi-plus-lg mr-2"></i>
+        Add Member
+    </a>
+</div>
+
+<!-- Table -->
+<div class="bg-white dark:bg-gray-800 rounded-2xl shadow border overflow-hidden">
+
+    <div class="overflow-x-auto h-[500px] overflow-y-auto">
+        <table class="w-full text-left">
+
+            <!-- Header -->
+            <thead>
+                <tr class="bg-gray-50 dark:bg-gray-900 border-b">
+                    <th class="px-6 py-4 text-xs font-bold uppercase">WorkFlow Group</th>
+                    <th class="px-6 py-4 text-xs font-bold uppercase">Sender</th>
+                    <th class="px-6 py-4 text-xs font-bold uppercase">Approver</th>
+                    <th class="px-6 py-4 text-xs font-bold uppercase">Sequence No</th>
+                    <th class="px-6 py-4 text-xs font-bold uppercase text-right">Actions</th>
+                </tr>
+            </thead>
+
+            <!-- Body -->
+            <tbody class="divide-y dark:divide-gray-700">
+                @foreach (var item in Model)
+                {
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition">
+                        <td class="px-6 py-4 text-sm">@item.WorkFlowUserGroup?.Description </td>
+                        <td class="px-6 py-4 text-sm">@item.Sender?.FullName</td>
+                        <td class="px-6 py-4 text-sm">@item.Approver?.FullName</td>
+                        <td class="px-6 py-4 text-sm">@item.SequenceNo</td>
+
+                        <!-- Actions -->
+                        <td class="px-6 py-4 text-right">
+                            <div class="inline-flex rounded-lg border">
+
+                                <a asp-action="Edit" asp-route-id="@item.Id"
+                                   class="px-3 py-1.5 text-xs hover:bg-gray-100 border-r rounded-l-lg">
+                                    <i class="bi bi-pencil"></i> Edit
+                                </a>
+
+                                <a asp-action="Details" asp-route-id="@item.Id"
+                                   class="px-3 py-1.5 text-xs hover:bg-gray-100 border-r">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+
+                                <a asp-action="Delete" asp-route-id="@item.Id"
+                                   class="px-3 py-1.5 text-xs text-red-600 hover:bg-red-50 rounded-r-lg">
+                                    <i class="bi bi-trash"></i> Delete
+                                </a>
+
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+                <!-- Empty State -->
+                @if (Model == null || !Model.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="px-6 py-16 text-center text-gray-500">
+                            <div class="flex flex-col items-center">
+                                <i class="bi bi-people text-4xl mb-3"></i>
+                                <p>No Members Found</p>
+                                <a asp-action="Create" class="mt-3 px-3 py-1.5 text-xs bg-blue-600 text-white rounded">
+                                    Add Member
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-6 py-3 bg-gray-50 dark:bg-gray-900 text-xs text-gray-500 font-bold">
+        Total: @Model.Count()
+    </div>
+
+</div>

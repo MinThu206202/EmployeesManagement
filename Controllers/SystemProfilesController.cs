@@ -62,7 +62,7 @@ namespace EmployeesManagement.Controllers
         {
             var Userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            systemProfile.CreatedById = "Min Thu";
+            systemProfile.CreatedById = Userid;
             systemProfile.CreatedOn = DateTime.Now;
             _context.Add(systemProfile);
             await _context.SaveChangesAsync(Userid);
@@ -101,27 +101,29 @@ namespace EmployeesManagement.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+
+            try
             {
-                try
-                {
-                    _context.Update(systemProfile);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SystemProfileExists(systemProfile.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                var Userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                systemProfile.ModifiedById = Userid;
+                systemProfile.ModifiedOn = DateTime.Now;
+                _context.Update(systemProfile);
+                await _context.SaveChangesAsync(Userid);
             }
-            ViewData["ProfileId"] = new SelectList(_context.SystemProfiles, "Id", "Id", systemProfile.ProfileId);
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!SystemProfileExists(systemProfile.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            ViewData["ProfileId"] = new SelectList(_context.SystemProfiles, "Id", "Name", systemProfile.ProfileId);
             return View(systemProfile);
         }
 

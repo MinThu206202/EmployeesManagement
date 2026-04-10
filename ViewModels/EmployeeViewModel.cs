@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using EmployeesManagement.Models;
 
-namespace EmployeeManagement.ViewModels
+namespace EmployeesManagement.ViewModels
 {
     public class EmployeeViewModel
     {
