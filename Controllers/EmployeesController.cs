@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using EmployeesManagement.Data;
 using EmployeesManagement.Models;
 using System.Security.Claims;
+using EmployeesManagement.ViewModels;
+using AutoMapper;
 
 namespace EmployeesManagement.Controllers
 {
@@ -15,17 +17,47 @@ namespace EmployeesManagement.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
-        public EmployeesController(IConfiguration configuration, ApplicationDbContext context)
+        public EmployeesController(IMapper mapper, IConfiguration configuration, ApplicationDbContext context)
         {
             _configuration = configuration;
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: Employees
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(EmployeeViewModel employees)
         {
-            return View(await _context.Employees.Include(x => x.Status).ToListAsync());
+            var rawdata = _context.Employees.Include(x => x.Status).AsQueryable();
+
+            if (!string.IsNullOrEmpty(employees.FullName.Trim()))
+            {
+                rawdata = rawdata
+                            .Where(x => x.FullName.Contains(employees.FullName));
+            }
+
+            if (!string.IsNullOrEmpty(employees.PhoneNumber))
+            {
+                rawdata = rawdata
+                    .Where(x => x.PhoneNumber == employees.PhoneNumber);
+            }
+
+            if (!string.IsNullOrEmpty(employees.EmailAddress))
+            {
+                rawdata = rawdata
+                            .Where(x => x.EmailAddress.Contains(employees.EmailAddress));
+            }
+
+            if (!string.IsNullOrEmpty(employees.EmpNo))
+            {
+                rawdata = rawdata
+                            .Where(x => x.EmpNo.Contains(employees.EmpNo));
+            }
+
+            employees.Employees = await rawdata.ToListAsync();
+
+            return View(employees);
         }
 
         // GET: Employees/Details/5
@@ -71,8 +103,12 @@ namespace EmployeesManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Employee employee, IFormFile employeephoto)
+        public async Task<IActionResult> Create(EmployeeViewModel newemployee, IFormFile employeephoto)
         {
+
+            var employee = new Employee();
+            _mapper.Map(newemployee, employee);
+
             if (employeephoto.Length > 0)
             {
                 var fileName = "EmployeePhoto_" + DateTime.Now.ToString("yyyymmddhhmmss") + "_" + employeephoto.FileName;

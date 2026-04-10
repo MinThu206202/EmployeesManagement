@@ -26,6 +26,58 @@ namespace EmployeesManagement.Data
                 .WithMany()
                 .HasForeignKey(l => l.StatusId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // ✅ ADD THIS PART
+            modelBuilder.Entity<ApprovalEntry>()
+    .HasOne(a => a.Status)
+    .WithMany()
+    .HasForeignKey(a => a.StatusId)
+    .OnDelete(DeleteBehavior.Restrict); // ✅ FIX
+
+            modelBuilder.Entity<ApprovalEntry>()
+                .HasOne(a => a.DocumentType)
+                .WithMany()
+                .HasForeignKey(a => a.DocumentTypeId)
+                .OnDelete(DeleteBehavior.Restrict); // ✅ FIX
+
+            // ✅ FIX CompanyInformation relationships
+            modelBuilder.Entity<CompanyInformation>()
+                .HasOne(c => c.City)
+                .WithMany()
+                .HasForeignKey(c => c.CityId)
+                .OnDelete(DeleteBehavior.Restrict); // 🔥 IMPORTANT
+
+            modelBuilder.Entity<CompanyInformation>()
+                .HasOne(c => c.Country)
+                .WithMany()
+                .HasForeignKey(c => c.CountryId)
+                .OnDelete(DeleteBehavior.Restrict); // 🔥 IMPORTANT
+
+            modelBuilder.Entity<WorkFlowUserGroupMember>()
+.HasOne(w => w.Sender)
+.WithMany()
+.HasForeignKey(w => w.SenderId)
+.OnDelete(DeleteBehavior.Restrict); // 🔥 FIX
+
+            modelBuilder.Entity<WorkFlowUserGroupMember>()
+                .HasOne(w => w.Approver)
+                .WithMany()
+                .HasForeignKey(w => w.ApproverId)
+                .OnDelete(DeleteBehavior.Restrict); // 🔥 FIX
+
+            modelBuilder.Entity<WorkFlowUserGroup>()
+    .HasOne(w => w.Department)
+    .WithMany()
+    .HasForeignKey(w => w.DepartmentId)
+    .IsRequired(false) // allow nulls for existing rows
+    .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<WorkFlowUserGroup>()
+                .HasOne(w => w.DocumentType)
+                .WithMany()
+                .HasForeignKey(w => w.DocumentTypeId)
+                .IsRequired(false) // allow nulls for existing rows
+                .OnDelete(DeleteBehavior.Restrict);
         }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Department> Departments { get; set; }
@@ -43,8 +95,11 @@ namespace EmployeesManagement.Data
         public DbSet<Holiday> Holidays { set; get; }
         public DbSet<LeavePeriod> LeavePeriods { set; get; }
         public DbSet<LeaveAdjustmentEntry> LeaveAdjustmentEntries { set; get; }
-
-
+        public DbSet<CompanyInformation> CompanyInformations { set; get; }
+        public DbSet<ApprovalEntry> ApprovalEntries { set; get; }
+        public DbSet<WorkFlowUserGroup> WorkFlowUserGroups { set; get; }
+        public DbSet<WorkFlowUserGroupMember> WorkFlowUserGroupMembers { set; get; }
+        public DbSet<ApprovalsUserMatrix> ApprovalsUserMatrices { set; get; }
         public virtual async Task<int> SaveChangesAsync(string UserId = null)
         {
             OnBeforeSavingChanges(UserId);

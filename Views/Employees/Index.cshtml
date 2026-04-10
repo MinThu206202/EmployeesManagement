@@ -1,4 +1,4 @@
-@model IEnumerable<EmployeesManagement.Models.Employee>
+@model EmployeesManagement.ViewModels.EmployeeViewModel
 
 @{
     ViewData["Title"] = "Employee List";
@@ -11,12 +11,43 @@
     </h2>
 
     <a asp-controller="Employees" asp-action="Create"
-           class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow transition-colors">
+       class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg shadow transition-colors">
         <i class="bi bi-plus-lg mr-2"></i>
         Add Employee
     </a>
 </div>
 
+<form method="get" asp-action="Index" class="mb-4">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+
+        <!-- Full Name -->
+        <input asp-for="FullName" placeholder="Full Name"
+               class="px-3 py-2 border rounded-lg text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
+
+        <!-- Employee No -->
+        <input asp-for="EmpNo" placeholder="Employee No"
+               class="px-3 py-2 border rounded-lg text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
+
+        <!-- Email -->
+        <input asp-for="EmailAddress" placeholder="Email Address"
+               class="px-3 py-2 border rounded-lg text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
+
+        <!-- Phone -->
+        <input asp-for="PhoneNumber" placeholder="Phone Number"
+               class="px-3 py-2 border rounded-lg text-sm dark:bg-gray-800 dark:border-gray-600 dark:text-white" />
+
+        <!-- Buttons -->
+        <div class="flex space-x-2">
+            <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg">
+                Search
+            </button>
+
+            <a asp-action="Index" class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-sm rounded-lg">
+                Clear
+            </a>
+        </div>
+    </div>
+</form>
 <!-- Table Container -->
 <div
     class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
@@ -55,7 +86,7 @@
 
             <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
 
-                @foreach (var item in Model)
+                @foreach (var item in Model.Employees)
                 {
                     <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors duration-150">
 
@@ -122,17 +153,17 @@
                             <div class="inline-flex rounded-lg shadow-sm border border-gray-200 dark:border-gray-600">
 
                                 <a asp-action="Edit" asp-route-id="@item.Id"
-                                       class="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-l-lg border-r border-gray-200 dark:border-gray-600">
+                                   class="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-l-lg border-r border-gray-200 dark:border-gray-600">
                                     <i class="bi bi-pencil"></i>
                                 </a>
 
                                 <a asp-action="Details" asp-route-id="@item.Id"
-                                       class="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                   class="px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700">
                                     <i class="bi bi-eye"></i>
                                 </a>
 
                                 <a asp-action="Delete" asp-route-id="@item.Id"
-                                       class="px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-r-lg">
+                                   class="px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-r-lg">
                                     <i class="bi bi-trash"></i>
                                 </a>
 
@@ -143,7 +174,7 @@
                 }
 
                 <!-- Empty Data -->
-                @if (!Model.Any())
+                @if (Model.Employees == null || !Model.Employees.Any())
                 {
                     <tr>
                         <td colspan="6" class="px-6 py-16 text-center text-gray-500 dark:text-gray-400">
@@ -155,7 +186,7 @@
                                 </p>
 
                                 <a asp-controller="Employees" asp-action="Create"
-                                       class="px-3 py-1.5 text-xs bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                   class="px-3 py-1.5 text-xs bg-blue-600 text-white rounded-md hover:bg-blue-700">
                                     Add First Employee
                                 </a>
                             </div>
@@ -173,21 +204,20 @@
         class="px-6 py-4 bg-gray-50 dark:bg-gray-900/50 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between text-xs text-gray-500 uppercase font-bold tracking-widest">
 
         <span>
-            Showing @Model.Count() Employees
-        </span>
+            Showing @Model.Employees.Count() Employees </span>
 
-        <div class="flex space-x-1">
-            <button
-                class="px-2 py-1 rounded border border-gray-200 dark:border-gray-600 hover:bg-white dark:hover:bg-gray-800">
-                Prev
-            </button>
+            <div class="flex space-x-1">
+                <button
+                    class="px-2 py-1 rounded border border-gray-200 dark:border-gray-600 hover:bg-white dark:hover:bg-gray-800">
+                    Prev
+                </button>
 
-            <button
-                class="px-2 py-1 rounded border border-gray-200 dark:border-gray-600 hover:bg-white dark:hover:bg-gray-800">
-                Next
-            </button>
+                <button
+                    class="px-2 py-1 rounded border border-gray-200 dark:border-gray-600 hover:bg-white dark:hover:bg-gray-800">
+                    Next
+                </button>
+            </div>
+
         </div>
 
     </div>
-
-</div>

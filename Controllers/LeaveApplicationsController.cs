@@ -201,7 +201,7 @@ namespace EmployeesManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LeaveApplication leaveApplication, IFormFile leaveattachemnt)
         {
-            if (leaveattachemnt.Length > 0)
+            if (leaveattachemnt != null && leaveattachemnt.Length > 0)
             {
                 var fileName = "LeaveAttachment" + DateTime.Now.ToString("yyyymmddhhmmss") + "_" + leaveattachemnt.FileName;
                 var path = _configuration["FileSettings:UploadFolder"]!;

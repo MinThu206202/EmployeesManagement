@@ -1,0 +1,169 @@
+@model EmployeesManagement.Models.CompanyInformation
+
+@{
+    ViewData["Title"] = "Create Company";
+}
+
+<div
+    class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
+
+    <form asp-action="Create" method="post" enctype="multipart/form-data" class="p-6 md:p-8">
+
+        <!-- Validation -->
+        <div asp-validation-summary="ModelOnly" class="mb-6 p-4 bg-red-50 text-red-600 text-sm rounded-lg border">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- Company Info -->
+            <div class="md:col-span-2 flex items-center gap-2 border-b pb-2">
+                <i class="bi bi-building text-blue-500"></i>
+                <h3 class="text-sm font-bold uppercase text-gray-400">
+                    Company Information
+                </h3>
+            </div>
+
+            <!-- Name -->
+            <div class="space-y-1">
+                <label asp-for="Name" class="text-sm font-semibold">Company Name</label>
+                <input asp-for="Name"
+                       class="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+                <span asp-validation-for="Name" class="text-xs text-red-500"></span>
+            </div>
+
+            <!-- Phone -->
+            <div class="space-y-1">
+                <label asp-for="PhoneNo" class="text-sm font-semibold">Phone Number</label>
+                <input asp-for="PhoneNo"
+                       class="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+                <span asp-validation-for="PhoneNo" class="text-xs text-red-500"></span>
+            </div>
+
+            <!-- Address -->
+            <div class="space-y-1 md:col-span-2">
+                <label asp-for="Address" class="text-sm font-semibold">Address</label>
+                <input asp-for="Address"
+                       class="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+                <span asp-validation-for="Address" class="text-xs text-red-500"></span>
+            </div>
+
+            <!-- KRA PIN -->
+            <div class="space-y-1">
+                <label asp-for="KRAPIN" class="text-sm font-semibold">KRA PIN</label>
+                <input asp-for="KRAPIN"
+                       class="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+                <span asp-validation-for="KRAPIN" class="text-xs text-red-500"></span>
+            </div>
+
+            <!-- Contact Person -->
+            <div class="space-y-1">
+                <label asp-for="ContactPerson" class="text-sm font-semibold">Contact Person</label>
+                <input asp-for="ContactPerson"
+                       class="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" />
+                <span asp-validation-for="ContactPerson" class="text-xs text-red-500"></span>
+            </div>
+
+            <!-- Location Section -->
+            <div class="md:col-span-2 flex items-center gap-2 border-b pb-2 mt-4">
+                <i class="bi bi-geo-alt text-green-500"></i>
+                <h3 class="text-sm font-bold uppercase text-gray-400">
+                    Location
+                </h3>
+            </div>
+
+            <!-- City -->
+            <div class="space-y-1">
+                <label asp-for="CityId" class="text-sm font-semibold">City</label>
+                <select asp-for="CityId" asp-items="ViewBag.CityId"
+                        class="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="">-- Select City --</option>
+                </select>
+                <span asp-validation-for="CityId" class="text-xs text-red-500"></span>
+            </div>
+
+            <!-- Country -->
+            <div class="space-y-1">
+                <label asp-for="CountryId" class="text-sm font-semibold">Country</label>
+                <select asp-for="CountryId" asp-items="ViewBag.CountryId"
+                        class="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="">-- Select Country --</option>
+                </select>
+                <span asp-validation-for="CountryId" class="text-xs text-red-500"></span>
+            </div>
+
+            <!-- Extra Section (Optional) -->
+            <div class="md:col-span-2 flex items-center gap-2 border-b pb-2 mt-4">
+                <i class="bi bi-file-earmark-text text-purple-500"></i>
+                <h3 class="text-sm font-bold uppercase text-gray-400">
+                    Additional Info
+                </h3>
+            </div>
+
+            <!-- NSSF -->
+            <div class="space-y-1">
+                <label asp-for="NSSFNO" class="text-sm font-semibold">NSSF No</label>
+                <input asp-for="NSSFNO" class="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <!-- NHIF -->
+            <div class="space-y-1">
+                <label asp-for="NHIFNO" class="text-sm font-semibold">NHIF No</label>
+                <input asp-for="NHIFNO" class="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <!-- Postal -->
+            <div class="space-y-1">
+                <label asp-for="PostalCode" class="text-sm font-semibold">Postal Code</label>
+                <input asp-for="PostalCode"
+                       class="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500" />
+            </div>
+
+            <!-- Logo -->
+            <div class="space-y-1 md:col-span-2">
+                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+                    Company Logo
+                </label>
+
+                <!-- File Input -->
+                <div class="flex items-center gap-4">
+                    <label
+                        class="cursor-pointer inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg shadow">
+                        <i class="bi bi-upload mr-2"></i>
+                        Upload Logo
+                        <input type="file" name="logo" accept="image/*" class="hidden" onchange="previewLogo(event)" />
+                    </label>
+
+                    <span id="file-name" class="text-sm text-gray-500">No file chosen</span>
+                </div>
+
+                <!-- Preview -->
+                <div class="mt-3">
+                    <img id="logo-preview" src="#" alt="Preview"
+                         class="hidden h-20 w-20 object-cover rounded-lg border" />
+                </div>
+
+                <span asp-validation-for="Logo" class="text-xs text-red-500"></span>
+            </div>
+
+            <!-- Buttons -->
+            <div class="md:col-span-2 flex justify-end gap-4 mt-6 border-t pt-6">
+                <a asp-action="Index" class="px-6 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow">
+                    <i class="bi bi-check2-circle mr-1"></i>
+                    Save Company
+                </button>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -2,6 +2,9 @@ using EmployeesManagement.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using EmployeesManagement.Models;
+using Microsoft.Extensions.Options;
+using EmployeeManagement.Profiles;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +29,19 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
+
+var config = new AutoMapper.MapperConfiguration(
+options =>
+{
+    options.AllowNullDestinationValues = true;
+    options.AllowNullCollections = true;
+    options.AddProfile(new AutomapperProfiles());
+}
+);
+
+var mapper = config.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
 
 var app = builder.Build();
 
