@@ -28,4 +28,8 @@ public class ApprovalEntry
     public ApplicationUser LastModifiedBy { set; get; }
     [DisplayName("Comment")]
     public string Comments { set; get; }
+
+    [DisplayName("Controller Name")]
+    public string ControllerName { set; get; }
+
 }
