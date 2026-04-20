@@ -1,65 +1,77 @@
 @model EmployeesManagement.Models.ApprovalsUserMatrix
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Matrix";
 }
 
-<h1>Create</h1>
+<div
+    class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
 
-<h4>ApprovalsUserMatrix</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="DocumentTypeId" class="control-label"></label>
-                <select asp-for="DocumentTypeId" class ="form-control" asp-items="ViewBag.DocumentTypeId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="WorkFlowUserGroupId" class="control-label"></label>
-                <select asp-for="WorkFlowUserGroupId" class ="form-control" asp-items="ViewBag.WorkFlowUserGroupId"></select>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Active" /> @Html.DisplayNameFor(model => model.Active)
-                </label>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedById" class="control-label"></label>
-                <input asp-for="CreatedById" class="form-control" />
-                <span asp-validation-for="CreatedById" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedOn" class="control-label"></label>
-                <input asp-for="CreatedOn" class="form-control" />
-                <span asp-validation-for="CreatedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedById" class="control-label"></label>
-                <input asp-for="ModifiedById" class="form-control" />
-                <span asp-validation-for="ModifiedById" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedOn" class="control-label"></label>
-                <input asp-for="ModifiedOn" class="form-control" />
-                <span asp-validation-for="ModifiedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+    <form asp-action="Create" method="post" class="p-6 md:p-8">
 
-<div>
-    <a asp-action="Index">Back to List</a>
+        <!-- Validation -->
+        <div asp-validation-summary="ModelOnly" class="mb-6 p-4 bg-red-50 text-red-600 text-sm rounded-lg border">
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- Section Header -->
+            <div class="md:col-span-2 flex items-center gap-2 border-b pb-2">
+                <i class="bi bi-diagram-3 text-blue-500"></i>
+                <h3 class="text-sm font-bold uppercase text-gray-400">
+                    Approvals User Matrix
+                </h3>
+            </div>
+
+            <!-- User -->
+            <div class="space-y-1">
+                <label asp-for="UserId" class="text-sm font-semibold">User</label>
+                <select asp-for="UserId" asp-items="ViewBag.UserId"
+                        class="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="">-- Select User --</option>
+                </select>
+                <span asp-validation-for="UserId" class="text-xs text-red-500"></span>
+            </div>
+
+            <!-- Document Type -->
+            <div class="space-y-1">
+                <label asp-for="DocumentTypeId" class="text-sm font-semibold">Document Type</label>
+                <select asp-for="DocumentTypeId" asp-items="ViewBag.DocumentTypeId"
+                        class="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="">-- Select Document Type --</option>
+                </select>
+                <span asp-validation-for="DocumentTypeId" class="text-xs text-red-500"></span>
+            </div>
+
+            <!-- Workflow Group -->
+            <div class="space-y-1 md:col-span-2">
+                <label asp-for="WorkFlowUserGroupId" class="text-sm font-semibold">Workflow Group</label>
+                <select asp-for="WorkFlowUserGroupId" asp-items="ViewBag.WorkFlowUserGroupId"
+                        class="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <option value="">-- Select Workflow Group --</option>
+                </select>
+                <span asp-validation-for="WorkFlowUserGroupId" class="text-xs text-red-500"></span>
+            </div>
+
+            <!-- Buttons -->
+            <div class="md:col-span-2 flex justify-end gap-4 mt-6 border-t pt-6">
+                <a asp-action="Index" class="px-6 py-2 text-sm text-gray-600 hover:bg-gray-100 rounded-lg">
+                    Cancel
+                </a>
+
+                <button type="submit"
+                        class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg shadow">
+                    <i class="bi bi-check2-circle mr-1"></i>
+                    Save Matrix
+                </button>
+            </div>
+
+        </div>
+    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

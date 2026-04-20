@@ -121,6 +121,12 @@ Migrations/
  20260409162551_InitialCreate.Designer.cs
  20260409163903_ResetSnapshot.cs
  20260409163903_ResetSnapshot.Designer.cs
+ 20260410090714_ControllerNameApprovalEntry.cs
+ 20260410090714_ControllerNameApprovalEntry.Designer.cs
+ 20260410091337_ControllerNameApprovalEntry1.cs
+ 20260410091337_ControllerNameApprovalEntry1.Designer.cs
+ 20260410092144_UserforeignKey.cs
+ 20260410092144_UserforeignKey.Designer.cs
  ApplicationDbContextModelSnapshot.cs
 Models/
  ApplicationUser.cs
