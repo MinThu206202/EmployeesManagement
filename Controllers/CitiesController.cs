@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EmployeesManagement.Data;
 using EmployeesManagement.Models;
+using System.Security.Claims;
 
 namespace EmployeesManagement.Controllers
 {
@@ -90,7 +91,7 @@ namespace EmployeesManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Name,CountryId")] City city)
+        public async Task<IActionResult> Edit(int id, City city)
         {
             if (id != city.Id)
             {
@@ -101,8 +102,9 @@ namespace EmployeesManagement.Controllers
             {
                 try
                 {
+                    var Userid =  User.FindFirstValue(ClaimTypes.NameIdentifier);
                     _context.Update(city);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(Userid);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -117,7 +119,7 @@ namespace EmployeesManagement.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id", city.CountryId);
+            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Name", city.CountryId);
             return View(city);
         }
 

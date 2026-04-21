@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using EmployeesManagement.Data;
 using EmployeesManagement.Models;
 using System.Security.Claims;
+using EmployeesManagement.ViewModels;
 
 
 
@@ -19,14 +20,18 @@ namespace EmployeesManagement.Controllers
 
         public SystemCodeDetailsController(ApplicationDbContext context)
         {
-            _context = context;
+            _context = context; 
         }
 
         // GET: SystemCodeDetails
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(SystemCodeDetailViewMode vm)
         {
-            var applicationDbContext = _context.SystemCodeDetails.Include(s => s.SystemCode);
-            return View(await applicationDbContext.ToListAsync());
+            vm.SystemCodeDetails = _context.SystemCodeDetails
+                                    .Include(s => s.SystemCode)
+                                    .Include(s => s.CreatedBy)
+                                    .ToListAsync();
+
+            return View(vm);
         }
 
         // GET: SystemCodeDetails/Details/5
@@ -88,7 +93,7 @@ namespace EmployeesManagement.Controllers
             {
                 return NotFound();
             }
-            ViewData["SystemCodeId"] = new SelectList(_context.SystemCodes, "Id", "Id", systemCodeDetail.SystemCodeId);
+            ViewData["SystemCodeId"] = new SelectList(_context.SystemCodes, "Id", "Description", systemCodeDetail.SystemCodeId);
             return View(systemCodeDetail);
         }
 
@@ -97,8 +102,10 @@ namespace EmployeesManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,SystemCodeId,Code,Description,OrderNo,CreatedById,CreatedOn,ModifiedById,ModifiedOn")] SystemCodeDetail systemCodeDetail)
+        public async Task<IActionResult> Edit(int id, SystemCodeDetail systemCodeDetail)
         {
+
+            
             if (id != systemCodeDetail.Id)
             {
                 return NotFound();
@@ -108,6 +115,9 @@ namespace EmployeesManagement.Controllers
             {
                 try
                 {
+                    var Userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    systemCodeDetail.ModifiedById = Userid;
+                    systemCodeDetail.ModifiedOn = DateTime.Now;
                     _context.Update(systemCodeDetail);
                     await _context.SaveChangesAsync();
                 }
@@ -124,7 +134,7 @@ namespace EmployeesManagement.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SystemCodeId"] = new SelectList(_context.SystemCodes, "Id", "Id", systemCodeDetail.SystemCodeId);
+            ViewData["SystemCodeId"] = new SelectList(_context.SystemCodes, "Id", "Description ", systemCodeDetail.SystemCodeId);
             return View(systemCodeDetail);
         }
 
@@ -152,13 +162,14 @@ namespace EmployeesManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var Userid = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var systemCodeDetail = await _context.SystemCodeDetails.FindAsync(id);
             if (systemCodeDetail != null)
             {
                 _context.SystemCodeDetails.Remove(systemCodeDetail);
             }
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(Userid);
             return RedirectToAction(nameof(Index));
         }
 

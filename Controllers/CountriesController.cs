@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EmployeesManagement.Data;
 using EmployeesManagement.Models;
+using System.Security.Claims;
 
 namespace EmployeesManagement.Controllers
 {
@@ -22,7 +23,11 @@ namespace EmployeesManagement.Controllers
         // GET: Countries
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Countries.ToListAsync());
+            var country = await _context.Countries
+                    .Include(x => x.CreatedById)
+                    .Include(x=>x.ModifiedById)
+                    .ToListAsync();
+            return View(country);
         }
 
         // GET: Countries/Details/5
@@ -34,6 +39,8 @@ namespace EmployeesManagement.Controllers
             }
 
             var country = await _context.Countries
+                .Include(x => x.CreatedById)
+                .Include(x => x.ModifiedById)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (country == null)
             {
@@ -54,8 +61,16 @@ namespace EmployeesManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Code,Name,CreatedById,CreatedOn,ModifiedById,ModifiedOn")] Country country)
+        public async Task<IActionResult> Create( Country country)
         {
+                                var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                    country.CreatedById = UserId;
+                    country.CreatedOn = DateTime.Now;
+            ModelState.Remove("CreatedBy"); 
+            ModelState.Remove("ModifiedBy"); 
+
+
             if (ModelState.IsValid)
             {
                 _context.Add(country);
@@ -86,7 +101,7 @@ namespace EmployeesManagement.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Name,CreatedById,CreatedOn,ModifiedById,ModifiedOn")] Country country)
+        public async Task<IActionResult> Edit(int id,  Country country)
         {
             if (id != country.Id)
             {
@@ -97,8 +112,12 @@ namespace EmployeesManagement.Controllers
             {
                 try
                 {
+                    var UserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                    country.ModifiedById = UserId;
+                    country.ModifiedOn = DateTime.Now;
                     _context.Update(country);
-                    await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync(UserId);
                 }
                 catch (DbUpdateConcurrencyException)
                 {

@@ -192,7 +192,7 @@ namespace EmployeesManagement.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("CreatedById")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
@@ -201,7 +201,7 @@ namespace EmployeesManagement.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ModifiedById")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("datetime2");
@@ -220,6 +220,8 @@ namespace EmployeesManagement.Migrations
                     b.HasIndex("DocumentTypeId");
 
                     b.HasIndex("ModifiedById");
+
+                    b.HasIndex("DocumentTypeId");
 
                     b.HasIndex("UserId");
 
@@ -1329,6 +1331,8 @@ namespace EmployeesManagement.Migrations
                     b.Navigation("DocumentType");
 
                     b.Navigation("ModifiedBy");
+
+                    b.Navigation("DocumentType");
 
                     b.Navigation("User");
 
